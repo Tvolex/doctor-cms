@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <img alt="Vue logo" width="250px" height="250px" src="https://www.ams-europe.com/images/icons/icon_clinical_research.png">
+        <img alt="Vue logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
         <Login msg="Welcome to the best medical center"/>
     </div>
 </template>

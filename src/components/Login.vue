@@ -75,14 +75,14 @@
             Login: async function() {
                 if (this.isFormValid) {
                     try {
-                        const res = await axios.post(`${this.host}/login`, {
+                        const res = await axios.post(`/login`, {
                             email: this.email,
                             password: this.password,
                         });
                         this.$store.commit("user", {type: "user", value: res.data});
                         this.$router.push('/dashboard');
                     }   catch (err) {
-                        this.notificator('error', 'Incorrect email');
+                        this.notificator('error', err.message);
                     }
 
                 }

@@ -27,7 +27,7 @@ export default new Vuex.Store({
             let res;
 
             try {
-                res = await axios.get(`${this.state.host}/auth`)
+                res = await axios.get(`/auth`)
             } catch (e) {
                 return commit('user', {type: 'user', value: null});
             }

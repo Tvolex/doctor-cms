@@ -34,7 +34,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex xs12>
-                                <v-btn color="success" v-on:click.native="SignIn">Вхід</v-btn>
+                                <v-btn color="success" v-on:click.native="Login">Вхід</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "Login",
         props: {
@@ -63,16 +65,40 @@
                     v => !!v || 'E-mail is required',
                     v => /.+@.+/.test(v) || 'E-mail must be valid'
                 ],
+                host: this.$store.getters.host,
             }
         },
+        beforeMount() {
+            this.$store.dispatch({type: "auth"});
+        },
         methods: {
-            SignIn() {
+            Login: async function() {
                 if (this.isFormValid) {
-                    console.log(`Valid: ${this.isFormValid}`);
-                    console.log(`email: ${this.email}`);
-                    console.log(`password: ${this.password}`);
-                }
+                    try {
+                        const res = await axios.post(`${this.host}/login`, {
+                            email: this.email,
+                            password: this.password,
+                        });
+                        this.$store.commit("user", {type: "user", value: res.data});
+                        this.$router.push('/dashboard');
+                    }   catch (err) {
+                        this.notificator('error', 'Incorrect email');
+                    }
 
+                }
+            },
+
+            notificator: function (type, message) {
+                switch (type) {
+                    case 'info': this.$toaster.info(message);
+                        break;
+                    case 'success': this.$toaster.success(message);
+                        break;
+                    case 'warning': this.$toaster.warning(message);
+                        break;
+                    case 'error': this.$toaster.error(message);
+                        break;
+                }
             },
         },
         watch: {

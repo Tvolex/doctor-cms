@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 const bodyParser = require ('body-parser');
 const session = require ('express-session');
 const cookieParser = require ('cookie-parser');
 const proxy = require('http-proxy-middleware');
 const Router = require('./api');
-const { API_HOST, API_PORT, PORT } = require('./config');
+const { API_HOST, PORT } = require('./config');
 const app = express();
 
 app.set('views', path.join(__dirname, '../dist'));
@@ -15,24 +16,28 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 app.use(cors());
 app.use(cookieParser('Kvb6swFdB&m66sk4aSB9pSKm'));
-app.use('/', proxy({
-    target: `http://${API_HOST}:${API_PORT}/`,
+app.use('/api', proxy({
+    target: `http://${API_HOST}`,
     changeOrigin: true,
     secure: false
-}));
-app.use(session({
-    secret: 'Kvb6swFdB&m66sk4aSB9pSKm',
-    resave: true,
-    saveUninitialized: true
 }));
 
 app.use(bodyParser.json());
 
+app.use('/api', Router);
 
-app.use(Router);
+app.use((req, res, next) => {
+    fs.readFile(path.join(__dirname, '../dist/index.html'), 'utf-8', (err, content) => {
+        if (err) {
+            console.log('error with read index.html')
+        }
 
-app.get('*', (req, res, next) => {
-    res.sendfile(path.join(__dirname, '../dist/index.html'));
+        res.writeHead(200, {
+            'Content-Type': 'text/html; charset=utf-8'
+        });
+
+        res.end(content)
+    })
 });
 
 app.listen(PORT, () => {

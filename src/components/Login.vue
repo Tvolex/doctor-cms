@@ -34,7 +34,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex xs12>
-                                <v-btn color="success" v-on:click.native="Login">Вхід</v-btn>
+                                <v-btn large round color="success" v-on:click.native="Login">Вхід</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -75,7 +75,7 @@
             Login: async function() {
                 if (this.isFormValid) {
                     try {
-                        const res = await axios.post(`/login`, {
+                        const res = await axios.post(`/api/login`, {
                             email: this.email,
                             password: this.password,
                         });

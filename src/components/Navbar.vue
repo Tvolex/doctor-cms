@@ -14,7 +14,9 @@
             </v-btn>
 
             <v-btn icon>
-                <v-icon>date_range</v-icon>
+                <router-link to="/dashboard">
+                    <v-icon>date_range</v-icon>
+                </router-link>
             </v-btn>
 
 
@@ -22,14 +24,14 @@
                 <v-icon>more_vert</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-navigation-drawer permanent>
+        <v-navigation-drawer absolute temporary v-model="statusNavBar">
             <v-list-tile avatar>
                 <v-list-tile-avatar>
-                    <img src="https://randomuser.me/api/portraits/men/85.jpg">
+                    <img src="https://lh3.googleusercontent.com/Uay9SaAfrGoP-tfXGilVbmfKx8q_Mqzn2zMM0CpPst2tgjgBuFzPTrSr5eYZpyFhxDREHKQpGFgeMXfTxO8=w1202-h1262">
                 </v-list-tile-avatar>
 
                 <v-list-tile-content>
-                    <v-list-tile-title> user name</v-list-tile-title>
+                    <v-list-tile-title> {{user.name}} </v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
 
@@ -46,7 +48,11 @@
                     </v-list-tile-action>
 
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        <router-link :to="item.route">
+                            <v-list-tile-title>
+                                {{ item.title }}
+                            </v-list-tile-title>
+                        </router-link>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
@@ -66,11 +72,13 @@
 
             statusNavBar: false,
             items: [
-                {title: 'Management', icon: 'people_outline'},
-                {title: 'Settings', icon: 'settings'},
-                {title: 'Новий пацієнт', icon: 'add'},
-                {title: 'Знайти пацієнта', icon: 'insert_drive_file'},
+                {title: 'Календар', icon: 'date_range', route: '/dashboard'},
+                {title: 'Статистика', icon: 'show_chart', route: '/dashboard/statistics'},
+                {title: 'Менеджмент', icon: 'people', route: '/dashboard'},
+                {title: 'Налаштування', icon: 'settings', route: '/dashboard/'},
+                {title: 'Новий пацієнт', icon: 'add', route: '/dashboard/'},
+                {title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/'},
             ],
-        })
+        }),
     }
 </script>

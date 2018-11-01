@@ -5,14 +5,14 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        host: process.env.VUE_APP_HOST || "http://localhost:3000",
-        user: null,
+        user: null, /*{
+            name: "Vasya Tysyanchyn",
+            email: "tisyanchin13@gmail.com",
+            password: 123456,
+            avatar: "https://lh3.googleusercontent.com/Uay9SaAfrGoP-tfXGilVbmfKx8q_Mqzn2zMM0CpPst2tgjgBuFzPTrSr5eYZpyFhxDREHKQpGFgeMXfTxO8=w1202-h1262",
+        },*/
     },
     getters: {
-        host(state) {
-            return state.host;
-        },
-
         user(state) {
             return state.user;
         },
@@ -25,9 +25,9 @@ export default new Vuex.Store({
     actions: {
         async auth ({commit}) {
             let res;
-
+            console.log('auth')
             try {
-                res = await axios.get(`/auth`)
+                res = await axios.get(`/api/auth`);
             } catch (e) {
                 return commit('user', {type: 'user', value: null});
             }

@@ -5,13 +5,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        user: null, /*{
-            name: "Vasya Tysyanchyn",
-            email: "tisyanchin13@gmail.com",
-            password: 123456,
-            avatar: "https://lh3.googleusercontent.com/Uay9SaAfrGoP-tfXGilVbmfKx8q_Mqzn2zMM0CpPst2tgjgBuFzPTrSr5eYZpyFhxDREHKQpGFgeMXfTxO8=w1202-h1262",
-        },*/
-    },
+        user: {
+			name: "Vasya Tysyanchyn",
+			email: "tisyanchin13@gmail.com",
+			password: 123456,
+			avatar: "https://instagram.fiev1-1.fna.fbcdn.net/vp/9e0f28c0fd07f8209b37ab3083d066aa/5C864F9B/t51.2885-15/sh0.08/e35/s640x640/36784619_209271899775865_8618151633781522432_n.jpg",
+		},
+	},
     getters: {
         user(state) {
             return state.user;
@@ -24,15 +24,23 @@ export default new Vuex.Store({
     },
     actions: {
         async auth ({commit}) {
+        	const hardCodedUser = {
+				name: "Vasya Tysyanchyn",
+				email: "tisyanchin13@gmail.com",
+				password: 123456,
+				avatar: "https://instagram.fiev1-1.fna.fbcdn.net/vp/9e0f28c0fd07f8209b37ab3083d066aa/5C864F9B/t51.2885-15/sh0.08/e35/s640x640/36784619_209271899775865_8618151633781522432_n.jpg",
+			};
+
             let res;
-            console.log('auth')
             try {
                 res = await axios.get(`/api/auth`);
             } catch (e) {
-                return commit('user', {type: 'user', value: null});
+				return commit('user', {type: 'user', value: null});
+            	// TODO: delete comment
             }
 
             const currentUser = res.data;
+			// TODO: delete comment
 
             commit('user', {type: 'user', value: currentUser});
         },

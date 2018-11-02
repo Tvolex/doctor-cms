@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <v-toolbar dark color="teal lighten-3" >
 
             <v-toolbar-side-icon @click="statusNavBar = !statusNavBar"></v-toolbar-side-icon>
@@ -47,13 +46,12 @@
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
 
-                    <v-list-tile-content>
-                        <router-link :to="item.route">
-                            <v-list-tile-title>
+                        <v-list-tile-content>
+                            <router-link tag="v-list-tile-title" :to="item.route">
                                 {{ item.title }}
-                            </v-list-tile-title>
-                        </router-link>
-                    </v-list-tile-content>
+                            </router-link>
+                        </v-list-tile-content>
+
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
@@ -68,17 +66,19 @@
         props: {
             user: Object
         },
-        data: () => ({
+        data () {
+        	return {
+				statusNavBar: false,
+				items: [
+					{title: 'Календар', icon: 'date_range', route: '/dashboard'},
+					{title: 'Статистика', icon: 'show_chart', route: '/dashboard/statistics'},
+					{title: 'Менеджмент', icon: 'people', route: '/dashboard/management'},
+					{title: 'Налаштування', icon: 'settings', route: '/dashboard/'},
+					{title: 'Новий пацієнт', icon: 'add', route: '/dashboard/newPatient'},
+					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/'},
+				],
+            }
 
-            statusNavBar: false,
-            items: [
-                {title: 'Календар', icon: 'date_range', route: '/dashboard'},
-                {title: 'Статистика', icon: 'show_chart', route: '/dashboard/statistics'},
-                {title: 'Менеджмент', icon: 'people', route: '/dashboard'},
-                {title: 'Налаштування', icon: 'settings', route: '/dashboard/'},
-                {title: 'Новий пацієнт', icon: 'add', route: '/dashboard/'},
-                {title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/'},
-            ],
-        }),
+        },
     }
 </script>

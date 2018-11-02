@@ -19,7 +19,9 @@ app.use(cookieParser('Kvb6swFdB&m66sk4aSB9pSKm'));
 app.use('/api', proxy({
     target: `http://${API_HOST}`,
     changeOrigin: true,
-    secure: false
+    secure: false,
+	proxyTimeout: 1000 * 60,
+    timeout: 1000 * 60,
 }));
 
 app.use(bodyParser.json());

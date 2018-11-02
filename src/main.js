@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuetify from "vuetify";
 import Toaster from 'v-toaster';
+import VueChartkick from 'vue-chartkick'
+import Chart from 'chart.js'
 import FullCalendar from 'vue-full-calendar'
 import App from "./App.vue";
 import router from "./router";
@@ -14,6 +16,7 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuetify);
 Vue.use(FullCalendar);
+Vue.use(VueChartkick, {adapter: Chart});
 Vue.use(Toaster, {timeout: 5000});
 
 new Vue({

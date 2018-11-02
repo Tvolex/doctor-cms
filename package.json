@@ -6,12 +6,13 @@
     "start": "node src/server.js",
     "dev": "nodemon %NODE_DEBUG_OPTION% src/server.js",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service  --mode=development build",
     "lint": "vue-cli-service lint",
     "postinstall": "npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "chart.js": "^2.7.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.4",
@@ -23,6 +24,7 @@
     "path": "^0.12.7",
     "v-toaster": "^1.0.3",
     "vue": "^2.5.17",
+    "vue-chartkick": "^0.5.0",
     "vue-full-calendar": "^2.7.0",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.17",

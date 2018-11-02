@@ -5,9 +5,6 @@ import About from "./views/About.vue";
 import Dashboard from "./views/Dashboard.vue";
 
 Vue.use(Router);
-
-const { Statistics } = Dashboard.components;
-
 export default new Router({
     mode: "history",
     base: process.env.BASE_URL,
@@ -32,11 +29,26 @@ export default new Router({
             name: "dashboard",
             component: Dashboard
         },
+		{
+			path: "/dashboard/",
+			name: "dashboard",
+			component: Dashboard
+		},
         {
             path: "/dashboard/statistics",
             name: "Statistics",
-            component: Statistics
+            component: Dashboard
         },
+		{
+			path: "/dashboard/newPatient",
+			name: "newPatient",
+			component: Dashboard
+		},
+		{
+			path: "/dashboard/management",
+			name: "newPatient",
+			component: Dashboard
+		},
 
     ]
 });

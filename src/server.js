@@ -6,7 +6,6 @@ const bodyParser = require ('body-parser');
 const session = require ('express-session');
 const cookieParser = require ('cookie-parser');
 const proxy = require('http-proxy-middleware');
-const Router = require('./api');
 const { API_HOST, PORT } = require('./config');
 const app = express();
 
@@ -25,8 +24,6 @@ app.use('/api', proxy({
 }));
 
 app.use(bodyParser.json());
-
-app.use('/api', Router);
 
 app.use((req, res, next) => {
     fs.readFile(path.join(__dirname, '../dist/index.html'), 'utf-8', (err, content) => {

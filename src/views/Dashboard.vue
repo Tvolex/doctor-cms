@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="auth && user">
         <Navbar :user="user"></Navbar>
         <main>
             <Calendar v-show="route === '/dashboard'"></Calendar>
@@ -26,21 +26,31 @@
 			NewPatient,
 			Management,
         },
-		async beforeMount() {
-			await this.$store.dispatch({type: "auth"});
+        created() {
+            this.auth();
 		},
 
         data() {
             return {}
         },
+
+        methods: {
+            auth: async function() {
+                const isAuth = await this.$store.dispatch({type: "auth"});
+
+                if (!isAuth) {
+                    return this.$router.push('/');
+                    // TODO: delete comment
+                }
+                return isAuth;
+            },
+        },
         computed: {
-			user: function() {
-				const user = this.$store.getters.user;
-				if (!user) {
-					return this.$router.push('/');
-				}
-				return user;
-			},
+
+            user: function () {
+			    return this.$store.getters.user;
+            },
+
 			route: function () {
 				return this.$route.fullPath;
 			}

@@ -11,12 +11,12 @@ export default new Router({
     routes: [
         {
             path: "/",
-            name: "home",
+            name: "Home",
             component: Home
         },
         {
             path: "/about",
-            name: "about",
+            name: "About",
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
@@ -26,12 +26,12 @@ export default new Router({
         },
         {
             path: "/dashboard",
-            name: "dashboard",
+            name: "Dashboard",
             component: Dashboard
         },
 		{
 			path: "/dashboard/",
-			name: "dashboard",
+			name: "Dashboard",
 			component: Dashboard
 		},
         {
@@ -44,11 +44,17 @@ export default new Router({
 			name: "newPatient",
 			component: Dashboard
 		},
+        {
+            path: "/dashboard/findPatient",
+            name: "newPatient",
+            component: Dashboard
+        },
 		{
 			path: "/dashboard/management",
 			name: "newPatient",
 			component: Dashboard
 		},
+
 
     ]
 });

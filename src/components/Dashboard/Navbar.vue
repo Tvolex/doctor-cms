@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="user">
         <v-toolbar dark color="teal lighten-3" >
 
             <v-toolbar-side-icon @click="statusNavBar = !statusNavBar"></v-toolbar-side-icon>
@@ -17,7 +17,6 @@
                     <v-icon>date_range</v-icon>
                 </router-link>
             </v-btn>
-
 
             <v-btn icon>
                 <v-icon>more_vert</v-icon>
@@ -38,7 +37,7 @@
 
             <v-list dense class="pt-0">
                 <v-list-tile
-                        v-for="item in items"
+                        v-for="item in dashboardNavigation"
                         :key="item.title"
                         @click=""
                 >
@@ -46,11 +45,33 @@
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
 
-                        <v-list-tile-content>
-                            <router-link tag="v-list-tile-title" :to="item.route">
-                                {{ item.title }}
-                            </router-link>
-                        </v-list-tile-content>
+                    <v-list-tile-content>
+                        <router-link tag="v-list-tile-title" :to="item.route">
+                            {{ item.title }}
+                        </router-link>
+                    </v-list-tile-content>
+
+                </v-list-tile>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list dense class="pt-0">
+                <v-list-tile
+                        v-for="item in userNavigation"
+                        :key="item.title"
+                        @click=""
+                >
+                    <v-list-tile-action>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                        <v-list-tile-title v-if="item.title === 'Вихід'" @click="logout">
+                            {{ item.title }}
+                        </v-list-tile-title>
+                        <router-link v-else tag="v-list-tile-title" :to="item.route">
+                            {{ item.title }}
+                        </router-link>
+                    </v-list-tile-content>
 
                 </v-list-tile>
             </v-list>
@@ -69,16 +90,24 @@
         data () {
         	return {
 				statusNavBar: false,
-				items: [
+				dashboardNavigation: [
 					{title: 'Календар', icon: 'date_range', route: '/dashboard'},
-					{title: 'Статистика', icon: 'show_chart', route: '/dashboard/statistics'},
+					{title: 'Статистика', icon: 'show_chart',route: '/dashboard/statistics'},
 					{title: 'Менеджмент', icon: 'people', route: '/dashboard/management'},
-					{title: 'Налаштування', icon: 'settings', route: '/dashboard/'},
 					{title: 'Новий пацієнт', icon: 'add', route: '/dashboard/newPatient'},
-					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/'},
+					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},
 				],
+                userNavigation: [
+                    {title: 'Налаштування', icon: 'settings', route: '/dashboard/settings'},
+                    {title: 'Вихід', icon: 'exit_to_app', route: '/'},
+                ],
             }
+        },
 
+        methods: {
+            logout: function () {
+                this.$store.dispatch({type: "logout"});
+            },
         },
     }
 </script>

@@ -106,7 +106,9 @@
 
         methods: {
             logout: function () {
-                this.$store.dispatch({type: "logout"});
+                 this.$store.dispatch({type: "logout"});
+
+				this.$router.push('/');
             },
         },
     }

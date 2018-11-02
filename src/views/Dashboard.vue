@@ -2,8 +2,8 @@
     <div v-if="auth && user">
         <Navbar :user="user"></Navbar>
         <main>
-            <Calendar v-show="route === '/dashboard'"></Calendar>
-            <Statistics v-show="route === '/dashboard/statistics'"></Statistics>
+            <Statistics v-show="route === '/dashboard'"></Statistics>
+            <Calendar v-show="route === '/dashboard/calendar'"></Calendar>
             <NewPatient v-show="route === '/dashboard/newPatient'"></NewPatient>
             <Management v-show="route === '/dashboard/management'"></Management>
         </main>

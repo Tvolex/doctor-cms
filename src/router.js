@@ -34,9 +34,14 @@ export default new Router({
 			name: "Dashboard",
 			component: Dashboard
 		},
+		{
+			path: "/dashboard/statistics",
+			name: "Statistics",
+			component: Dashboard
+		},
         {
-            path: "/dashboard/statistics",
-            name: "Statistics",
+            path: "/dashboard/calendar",
+            name: "Calendar",
             component: Dashboard
         },
 		{

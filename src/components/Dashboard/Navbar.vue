@@ -91,8 +91,8 @@
         	return {
 				statusNavBar: false,
 				dashboardNavigation: [
-					{title: 'Календар', icon: 'date_range', route: '/dashboard'},
-					{title: 'Статистика', icon: 'show_chart',route: '/dashboard/statistics'},
+					{title: 'Статистика', icon: 'show_chart',route: '/dashboard'},
+					{title: 'Календар', icon: 'date_range', route: '/dashboard/calendar'},
 					{title: 'Менеджмент', icon: 'people', route: '/dashboard/management'},
 					{title: 'Новий пацієнт', icon: 'add', route: '/dashboard/newPatient'},
 					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},

@@ -57,41 +57,38 @@
 			user: Object
 		},
 		components: { datepicker },
+        mounted() {
+			this.getStatistics();
+        },
 		data () {
 			return {
 				buttonLoader: null,
 				loading: false,
 				dateFrom: moment().format("YYYY-MM-DD"),
 				dateTo: moment().format("YYYY-MM-DD"),
-				statistics: {
-					pieChartData: {'Обстежено': 22, 'Записано на обстеження': 44},
+                statistics: {
+					pieChartData: {'Обстежено': 0, 'Записано на обстеження': 0},
 					lineChartData: [
-						{name: 'Кількість пацієнтів', data: {'2018-11-01': 5, '2018-11-02': 4, '2018-11-03': 5, '2018-11-04': 7, '2018-11-05': 3, '2018-11-06': 6,}},
+						{name: 'Кількість пацієнтів', data: {}},
 					],
-                },
-
-
+                }
 			}
 		},
 		methods: {
-            getStatistics: async function () {
+            getStatistics: function () {
 				this.buttonLoader = true;
-				let res;
 
-				try {
-					res = await axios.get(`/api/getStatistics`);
-				} catch (err) {
+				axios.get(`/api/user/getStatistics`).then(({ data } = res) => {
+					this.statistics = data.statistics;
+                }).catch((err) => {
 					console.log(err);
 					let message = 'Щось сталось не так :(';
 					if (err.response && err.response.data && err.response.data.message) {
 						message = err.response.data.message;
 					}
 					return this.$notificator('error', message);
-				}
+                }).finally(() => this.buttonLoader = false);
 
-				this.statistics = res.data;
-
-				this.buttonLoader = false;
 			},
 		},
 

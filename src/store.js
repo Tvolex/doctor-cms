@@ -31,7 +31,7 @@ export default new Vuex.Store({
 
             let res;
             try {
-                res = await axios.get(`/api/auth`);
+                res = await axios.get(`/api/auth/check`);
             } catch (e) {
                 // return commit('user', {type: 'user', value: hardCodedUser});
                 commit('user', {type: 'user', value: null});
@@ -50,7 +50,7 @@ export default new Vuex.Store({
         async logout ({commit}) {
             let res;
             try {
-                res = await axios.get(`/api/logout`);
+                res = await axios.get(`/api/auth/logout`);
             } catch (e) {
                 return commit('user', {type: 'user', value: null});
             }

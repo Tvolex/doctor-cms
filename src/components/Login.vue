@@ -75,7 +75,7 @@
             Login: async function() {
                 if (this.isFormValid) {
                     try {
-                        const res = await axios.post(`/api/login`, {
+                        const res = await axios.post(`/api/auth/login`, {
                             email: this.email,
                             password: this.password,
                         });

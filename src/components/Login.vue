@@ -26,7 +26,7 @@
                                         v-model="password"
                                         :rules="passwordRules"
                                         type="password"
-                                        label="Password"
+                                        label="Пароль"
                                         name="password"
                                         required
                                 ></v-text-field>
@@ -59,17 +59,22 @@
                 email: null,
                 password: null,
                 passwordRules: [
-                    v => !!v || 'password is required'
+                    v => !!v || 'Пароль обов`язковий!'
                 ],
                 emailRules: [
-                    v => !!v || 'E-mail is required',
-                    v => /.+@.+/.test(v) || 'E-mail must be valid'
+                    v => !!v || 'E-mail обов`язковий!',
+                    v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
                 ],
                 host: this.$store.getters.host,
             }
         },
-        beforeMount() {
-            this.$store.dispatch({type: "auth"});
+        beforeCreate() {
+            this.$store.dispatch({type: "auth"}).then((isAuth) => {
+				if (isAuth)
+					this.$router.push('/dashboard');
+				else
+					this.$notificator('error', 'Не авторизовано!');
+            })
         },
         methods: {
             Login: async function() {

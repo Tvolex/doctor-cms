@@ -6,7 +6,8 @@
     "start": "node src/server.js",
     "dev": "nodemon %NODE_DEBUG_OPTION% src/server.js",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service --mode=development  build",
+    "build": "vue-cli-service --mode=development build",
+    "build:watch": "vue-cli-service --mode=development --watch build",
     "lint": "vue-cli-service lint",
     "postinstall": "npm run build"
   },

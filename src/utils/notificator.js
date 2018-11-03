@@ -3,7 +3,7 @@ import 'v-toaster/dist/v-toaster.css';
 
 const Notificator = {
 	install(Vue, options) {
-		Vue.use(Toaster, {timeout: 3000});
+		Vue.use(Toaster, {timeout: 5000});
 		Vue.prototype.$notificator = function (type, message) {
 			switch (type) {
 				case 'info': this.$toaster.info(message);

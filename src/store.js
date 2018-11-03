@@ -57,5 +57,7 @@ export default new Vuex.Store({
 
             commit('user', {type: 'user', value: null});
         },
+
+
     }
 });

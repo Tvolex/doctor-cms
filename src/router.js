@@ -59,6 +59,11 @@ export default new Router({
 			name: "newPatient",
 			component: Dashboard
 		},
+		{
+			path: "/dashboard/settings",
+			name: "Settings",
+			component: Dashboard
+		},
 
 
     ]

@@ -13,7 +13,7 @@
             </v-btn>
 
             <v-btn icon>
-                <router-link to="/dashboard">
+                <router-link to="/dashboard/calendar">
                     <v-icon>date_range</v-icon>
                 </router-link>
             </v-btn>
@@ -25,7 +25,7 @@
         <v-navigation-drawer absolute temporary v-model="statusNavBar">
             <v-list-tile avatar>
                 <v-list-tile-avatar>
-                    <img src="https://lh3.googleusercontent.com/Uay9SaAfrGoP-tfXGilVbmfKx8q_Mqzn2zMM0CpPst2tgjgBuFzPTrSr5eYZpyFhxDREHKQpGFgeMXfTxO8=w1202-h1262">
+                    <img :src="user.avatar">
                 </v-list-tile-avatar>
 
                 <v-list-tile-content>

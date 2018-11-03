@@ -82,22 +82,14 @@
                         this.$store.commit("user", {type: "user", value: res.data});
                         this.$router.push('/dashboard');
                     }   catch (err) {
-                        this.notificator('error', err.message);
+                    	console.log(err);
+                    	let message = 'Щось сталось не так :(';
+                    	if (err.response && err.response.data && err.response.data.message) {
+							message = err.response.data.message;
+                        }
+						return this.$notificator('error', message);
                     }
 
-                }
-            },
-
-            notificator: function (type, message) {
-                switch (type) {
-                    case 'info': this.$toaster.info(message);
-                        break;
-                    case 'success': this.$toaster.success(message);
-                        break;
-                    case 'warning': this.$toaster.warning(message);
-                        break;
-                    case 'error': this.$toaster.error(message);
-                        break;
                 }
             },
         },

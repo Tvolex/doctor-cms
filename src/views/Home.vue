@@ -2,22 +2,34 @@
     <div class="home">
         <div id="nav">
             <router-link to="/">Home</router-link> |
-            <router-link to="/about">About</router-link>
+            <router-link to="/about">About</router-link> |
+            <router-link to="/login">Login</router-link>
         </div>
-        <img alt="Vue logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
-        <Login msg="Welcome to the best medical center"/>
+        <img alt="Logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
+        <v-app>
+            <newEvent></newEvent>
+            <Register v-if="newUser"></Register>
+        </v-app>
     </div>
 </template>
 
 <script>
-    /* eslint-disable */
+
     // @ is an alias to /src
-    import Login from "@/components/Login.vue";
+    import Register from '@/components/Home/Register';
+	import newEvent from '@/components/Home/newEvent'
 
     export default {
-        name: "home",
+        name: "Home",
         components: {
-            Login,
-        }
+			Register,
+			newEvent,
+        },
+        data() {
+        	return {
+        		newUser: false,
+            }
+        },
+
     };
 </script>

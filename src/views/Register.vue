@@ -166,7 +166,7 @@
                                     v-model="passportSeries"
                                     :rules="passportSeriesRules"
                                     label="Серія паспорта"
-                                    type="number"
+                                    max="3"
                                     name="passportSeries"
                                     outline
                                     required
@@ -197,6 +197,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
 	import moment from 'moment'
 	export default {
 		name: "Register",
@@ -245,13 +246,33 @@
 			Register: function () {
 				this.loading = true;
 
-				setTimeout(()=> {
+				axios.post('/api/event', {
+					event: this.$store.getters.event,
+					newPatient: {
+						email: this.email,
+						name: this.name,
+						surname: this.surname,
+						patronymic: this.patronymic,
+						birthdate: this.birthdate,
+						city: this.city,
+						street: this.street,
+						house: this.house,
+						apartment: this.apartment,
+						passportSeries: this.passportSeries,
+						passportNumber: this.passportNumber,
+                    },
+                }).then((res) => {
 					this.loading = false;
-					this.registered = { type: 'info', message: 'Ви були зареєстровані,' +
-							' при наступному запису використовуйте цей ключ: ' + Math.random().toString(36).substr(2)
-					};
+					this.registered = res.data;
 					this.registeredModal = true;
-                },2000)
+                }).catch((err) => {
+					console.log(err);
+					let message = 'Щось сталось не так :(';
+					if (err.response && err.response.data && err.response.data.message) {
+						message = err.response.data.message;
+					}
+					return this.$notificator('error', message);
+                });
 			},
 			Create() {
 				console.log('Created');

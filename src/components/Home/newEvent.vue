@@ -1,64 +1,84 @@
 <template>
-    <v-container fluid>
-        <v-layout v-if="!registerPage" row wrap main-items>
-            <v-flex xs8 offset-xs2 md6 offset-md3>
-                <h2>
-                    Оберіть лікара
-                </h2>
+    <div class="newEvent">
+        <div id="nav">
+            <router-link to="/">Home</router-link> |
+            <router-link to="/about">About</router-link> |
+            <router-link to="/login">Login</router-link>
+        </div>
+        <img alt="Logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
+        <v-container fluid>
+            <v-layout row wrap main-items>
+                <v-flex xs8 offset-xs2 md6 offset-md3>
+                    <h2>
+                        Оберіть лікара
+                    </h2>
 
-                <v-form v-model="isFormValid" name="newEventForm">
-                    <v-layout justify-space-between wrap>
-                        <v-flex xs12>
-                            <v-select
-                                    :items="specializations"
-                                    v-model="specialization"
-                                    label="Спеціалізація"
-                                    required
-                                    outline
-                            ></v-select>
-                        </v-flex>
-                        <v-flex xs12 v-if="specialization">
-                            <v-select
-                                    :items="doctors"
-                                    item-text="name"
-                                    item-value="_id"
-                                    v-model="doctor"
-                                    label="Лікар"
-                                    required
-                                    outline
-                            ></v-select>
-                        </v-flex>
-                        <v-flex xs12 v-if="doctor">
-                            <v-select
-                                    :items="availableDates()"
-                                    v-model="date"
-                                    label="Оберіть дату"
-                                    single-line
-                                    outline
-                            ></v-select>
-                        </v-flex>
-                        <v-flex xs12 v-if="doctor">
-                            <v-select
-                                    :items="availableHours()"
-                                    v-model="time"
-                                    label="Оберіть час"
-                                    single-line
-                                    outline
-                            ></v-select>
-                        </v-flex>
+                    <v-form v-model="isFormValid" name="newEventForm">
+                        <v-layout justify-space-between wrap>
+                            <v-flex xs12>
+                                <v-select
+                                        :items="specializations"
+                                        v-model="specialization"
+                                        label="Спеціалізація"
+                                        :rules="specializationRules"
+                                        required
+                                        outline
+                                ></v-select>
+                            </v-flex>
+                            <v-flex xs12 v-if="specialization">
+                                <v-select
+                                        :items="doctors"
+                                        item-text="name"
+                                        item-value="_id"
+                                        v-model="doctor"
+                                        :rules="doctorRules"
+                                        label="Лікар"
+                                        required
+                                        outline
+                                ></v-select>
+                            </v-flex>
+                            <v-flex xs12 v-if="doctor">
+                                <v-select
+                                        :items="availableDates()"
+                                        v-model="date"
+                                        label="Оберіть дату"
+                                        :rules="dateRules"
+                                        single-line
+                                        required
+                                        outline
+                                ></v-select>
+                            </v-flex>
+                            <v-flex xs12 v-if="doctor">
+                                <v-select
+                                        :items="availableHours()"
+                                        v-model="time"
+                                        label="Оберіть час"
+                                        single-line
+                                        :rules="timeRules"
+                                        required
+                                        outline
+                                ></v-select>
+                            </v-flex>
+                        </v-layout>
+                    </v-form>
+                </v-flex>
+            </v-layout>
+            <v-layout>
+                <v-flex xs12>
+                    <v-btn
+                            large
+                            round
+                            color="success"
+                            v-on:click.native="create"
+                            :disabled="!isFormValid">
 
-                    </v-layout>
+                        Далі
+                    </v-btn>
+                </v-flex>
+            </v-layout>
+        </v-container>
+    </div>
 
-                </v-form>
-            </v-flex>
-        </v-layout>
-        <v-layout v-if="!registerPage">
-            <v-flex xs12>
-                <v-btn large round color="success" v-on:click.native="registerPage = !registerPage">Далі</v-btn>
-            </v-flex>
-        </v-layout>
-        <Register v-if="registerPage"></Register>
-    </v-container>
 </template>
 
 <script>
@@ -67,27 +87,24 @@
     import business from 'moment-business';
 	import { extendMoment } from 'moment-range';
 
-	import Register from '@/components/Home/Register';
-
 	const moment = extendMoment(Moment);
 
 	export default {
 		name: "newEvent",
-        components: {
-			Register
-        },
+        components: {},
 		data() {
 			return {
-				menu: null,
 				isFormValid: false,
-                date: moment().format("YYYY-MM-DD"),
-				newUser: false,
-				specialization: null,
 				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
-				doctor: null,
 				doctors: null,
+				specialization: null,
+				doctor: null,
+				date: moment().format("YYYY-MM-DD"),
 				time: null,
-				registerPage: false,
+				specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
+				doctorRules: [(v)=> !!v || 'Вибір лікара обов`язковий!'],
+				dateRules: [(v)=> !!v || 'Дата обов`язкова!'],
+				timeRules: [(v)=> !!v || 'Час обов`язковий!'],
 			}
 		},
 		methods: {
@@ -124,7 +141,6 @@
 
 				return workDays.filter(day => !!day);
 			},
-			allowedStep: m => m % 10 === 0,
 			getDoctors () {
 				axios.get(`/api/user`, {
 					params: {
@@ -152,6 +168,22 @@
 
 				});
             },
+            create: function () {
+
+				if (this.isFormValid) {
+
+					this.$store.commit('event', {type: 'event', value: {
+							specialization: this.specialization,
+							doctor: this.doctor,
+							date: this.date,
+							time: this.time,
+						}
+					});
+
+					this.$router.push('/register');
+
+                }
+			}
 		},
 		watch: {
 			specialization(value, oldValue) {

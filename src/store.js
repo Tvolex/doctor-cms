@@ -6,16 +6,23 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         user: null,
+		event: null,
 	},
     getters: {
         user(state) {
             return state.user;
         },
+		event(state) {
+			return state.event;
+		},
     },
     mutations: {
         user(state, {type, value}) {
             state[type] = value;
         },
+		event(state, {type, value}) {
+			state[type] = value;
+		},
         exit(state, {type, value}) {
             state[type] = value;
         },
@@ -33,6 +40,7 @@ export default new Vuex.Store({
             commit('user', {type: 'user', value: res.data});
             return true;
         },
+
         async logout ({commit}) {
             let res;
             try {

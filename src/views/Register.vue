@@ -11,7 +11,7 @@
                 <h2>
                     Реєстрація пацієнта
                 </h2>
-                <router-link to="/personalKey"> Або введіть свій ключ</router-link> |
+                <router-link to="/personalKey">Або введіть свій ключ</router-link>
                 <v-dialog
                         v-model="loading"
                         hide-overlay
@@ -200,6 +200,12 @@
 	import moment from 'moment'
 	export default {
 		name: "Register",
+		beforeCreate() {
+			if (!this.$store.getters.event) {
+				this.$router.push('/');
+				this.$notificator('error', 'Будь-ласка, повторіть вибір даних, так як вони були втрачені');
+			}
+		},
 		data() {
 			return {
 				registered: null,

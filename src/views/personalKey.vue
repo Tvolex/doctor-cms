@@ -41,6 +41,12 @@
 <script>
 	export default {
 		name: "personalKey",
+        beforeMount() {
+			if (!this.$store.getters.event) {
+				this.$router.push('/');
+				this.$notificator('error', 'Будь-ласка, повторіть вибір даних, так як вони були втрачені');
+            }
+        },
 		data() {
 			return {
 				loading: false,

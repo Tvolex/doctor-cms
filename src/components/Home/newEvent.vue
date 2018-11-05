@@ -28,7 +28,7 @@
                             <v-flex xs12 v-if="specialization">
                                 <v-select
                                         :items="doctors"
-                                        item-text="name"
+                                        item-text="fullName"
                                         item-value="_id"
                                         v-model="doctor"
                                         :rules="doctorRules"

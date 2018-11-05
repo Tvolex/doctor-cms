@@ -13,24 +13,6 @@
                 </h2>
                 <router-link to="/personalKey">Або введіть свій ключ</router-link>
                 <v-dialog
-                        v-model="loading"
-                        hide-overlay
-                        persistent
-                        width="300">
-                    <v-card
-                            color="primary"
-                            dark>
-                        <v-card-text>
-                            Зачекайте
-                            <v-progress-linear
-                                    indeterminate
-                                    color="white"
-                                    class="mb-0"
-                            ></v-progress-linear>
-                        </v-card-text>
-                    </v-card>
-                </v-dialog>
-                <v-dialog
                         v-if="!!registered"
                         v-model="registeredModal"
                         max-width="290">
@@ -186,7 +168,15 @@
                     </v-layout>
                     <v-layout>
                         <v-flex xs12>
-                            <v-btn large round color="success" v-on:click.native="Register">Зараєструватись</v-btn>
+                            <v-btn large round color="success"
+                                   :loading="loading"
+                                   :disabled="!isFormValid"
+                                   @click="Register">
+                                Зараєструватись
+                                <span slot="loader" class="custom-loader">
+                                    <v-icon light>cached</v-icon>
+                                </span>
+                            </v-btn>
                         </v-flex>
                     </v-layout>
                 </v-form>
@@ -266,8 +256,9 @@
 					this.registered = res.data;
 					this.registeredModal = true;
                 }).catch((err) => {
+                    this.loading = false;
 					console.log(err);
-					let message = 'Щось сталось не так :(';
+					let message = err.message || 'Щось сталось не так :(';
 					if (err.response && err.response.data && err.response.data.message) {
 						message = err.response.data.message;
 					}

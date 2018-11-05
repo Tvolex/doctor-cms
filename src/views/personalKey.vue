@@ -27,7 +27,16 @@
                     </v-layout>
                     <v-layout>
                         <v-flex xs12>
-                            <v-btn large round color="success" v-on:click.native="Create">Записатись</v-btn>
+                            <v-btn large round color="success"
+                                   :loading="loading"
+                                   :disabled="!isFormValid"
+                                   @click="Create">
+                                Записатись
+                                <span slot="loader" class="custom-loader">
+                                    <v-icon light>cached</v-icon>
+                                </span>
+                            </v-btn>
+
                         </v-flex>
                     </v-layout>
                 </v-form>
@@ -39,6 +48,8 @@
 </template>
 
 <script>
+    import axios from  'axios';
+
 	export default {
 		name: "personalKey",
         beforeMount() {
@@ -54,13 +65,35 @@
 				isFormValid: false,
 				personalKey: null,
 				personalKeyRules: [
-                    (v)=> !!v || 'Персональний ключ обов`язковий!'
-                ]
+                    (v)=> !!v || 'Персональний ключ обов`язковий!',
+                    (v)=> !!v && v.length === 32 || 'Ключ повинен складатись з 32-ох символів'
+                ],
+
 			}
 		},
         methods: {
 			Create() {
-				console.log('created')
+                this.loading = true;
+
+                axios.post('/api/event', {
+                    event: this.$store.getters.event,
+                    personalKey: this.personalKey,
+                }).then((res) => {
+
+                    if (res.data && res.data.type && res.data.message) {
+                        this.$notificator(res.data.type, res.data.message);
+                    }
+
+                }).catch((err) => {
+                    console.log(err);
+                    let message = 'Щось сталось не так :(';
+                    if (err.response && err.response.data && err.response.data.message) {
+                        message = err.response.data.message;
+                    }
+                    return this.$notificator('error', message);
+                }).finally(() => {
+                    this.loading = false;
+                });
             }
         }
 	}

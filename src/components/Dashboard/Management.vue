@@ -5,13 +5,14 @@
                 <v-list subheader>
                     <v-subheader>Пацієнти</v-subheader>
                     <v-list-tile
-                            v-for="user in users"
+                            v-for="user in patients"
                             :key="user.name"
                             avatar
                             @click=""
                     >
                         <v-list-tile-avatar>
-                            <img :src="user.avatar">
+                            <img v-if="user.avatar" :src="user.avatar">
+                            <img v-else src="@/assets/person.png" alt="">
                         </v-list-tile-avatar>
 
                         <v-list-tile-content>
@@ -30,12 +31,14 @@
 </template>
 
 <script>
+    import _ from 'lodash';
 	export default {
 		name: "Management",
-        beforeCreate() {
-            this.$store.dispatch({type: "patients"}).then((arePatients) => {
-                if (!arePatients)
-                    this.$notificator('error', 'Ви немаєте жодного пацієнта!');
+		 beforeCreate() {
+			this.$store.dispatch({type: "patients"}).then((patients) => {
+				if (_.isEmpty(patients)) {
+					this.$notificator('warning', 'Ви немаєте жодного пацієнта!')
+                }
             })
         },
 		data () {
@@ -47,7 +50,12 @@
 					{ name: 'Ali Connors', email: "user4@gmail.com",avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' }
 				],
 			}
-		}
+		},
+        computed: {
+			patients() {
+				return this.$store.getters.patients;
+            }
+        }
 	}
 </script>
 

@@ -42,7 +42,7 @@
                 const isAuth = await this.$store.dispatch({type: "auth"});
 
                 if (!isAuth) {
-                    return this.$router.push('/');
+                    return this.$router.push('/login');
                     // TODO: delete comment
                 }
                 return isAuth;

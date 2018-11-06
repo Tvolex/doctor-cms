@@ -48,14 +48,19 @@ export default new Vuex.Store({
             return true;
         },
 
-        async patients ({commit}) {
-            axios.get('/api/user/patients').then((res) => {
-                commit('patients', {type: 'patients', value: res.data});
-                return res.data;
-            }).catch((err) => {
-                console.log(err);
-                return false;
-            });
+		async patients ({commit}) {
+			let res;
+			try {
+				res = await axios.get(`/api/user/patients`, {
+					type: 'patient',
+				});
+			} catch (err) {
+				console.log(err);
+				commit('user', {type: 'user', value: null});
+				return [];
+			}
+			commit('patients', {type: 'patients', value: res.data});
+			return res.data;
         },
 
         async logout ({commit}) {

@@ -32,6 +32,12 @@
 <script>
 	export default {
 		name: "Management",
+        beforeCreate() {
+            this.$store.dispatch({type: "patients"}).then((arePatients) => {
+                if (!arePatients)
+                    this.$notificator('error', 'Ви немаєте жодного пацієнта!');
+            })
+        },
 		data () {
 			return {
 				users: [

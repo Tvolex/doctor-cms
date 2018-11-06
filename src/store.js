@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         user: null,
 		event: null,
+        patients: null,
 	},
     getters: {
         user(state) {
@@ -15,6 +16,9 @@ export default new Vuex.Store({
 		event(state) {
 			return state.event;
 		},
+        patients(state) {
+            return state.patients;
+        },
     },
     mutations: {
         user(state, {type, value}) {
@@ -23,6 +27,9 @@ export default new Vuex.Store({
 		event(state, {type, value}) {
 			state[type] = value;
 		},
+        patients(state, {type, value}) {
+            state[type] = value;
+        },
         exit(state, {type, value}) {
             state[type] = value;
         },
@@ -39,6 +46,16 @@ export default new Vuex.Store({
             }
             commit('user', {type: 'user', value: res.data});
             return true;
+        },
+
+        async patients ({commit}) {
+            axios.get('/api/user/patients').then((res) => {
+                commit('patients', {type: 'patients', value: res.data});
+                return res.data;
+            }).catch((err) => {
+                console.log(err);
+                return false;
+            });
         },
 
         async logout ({commit}) {

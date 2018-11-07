@@ -1,7 +1,7 @@
 <template>
     <v-layout row>
-        <v-flex xs12 sm6 offset-sm3 md8 offset-md2>
-            <v-card>
+        <v-flex xs12 sm10 offset-sm1 md8 offset-md2>
+            <v-card class="ma-3">
                 <v-list subheader>
                     <v-subheader>Пацієнти</v-subheader>
                     <v-list-tile
@@ -15,12 +15,18 @@
                             <img v-else src="@/assets/person.png" alt="">
                         </v-list-tile-avatar>
 
-                        <v-list-tile-content>
-                            <v-list-tile-title v-html="user.name"></v-list-tile-title>
-                        </v-list-tile-content>
-                        <v-list-tile-content>
-                            <v-list-tile-title v-html="user.email"></v-list-tile-title>
-                        </v-list-tile-content>
+                        <v-layout align-center justify-center row wrap>
+                            <v-flex xs12 sm6 lm5 md6>
+                                <v-list-tile-content>
+                                    <v-list-tile-title v-html="user.name"></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-flex>
+                            <v-flex xs12 sm6 lm5 md6>
+                                <v-list-tile-content>
+                                    <v-list-tile-title v-html="user.email"></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-flex>
+                        </v-layout>
                     </v-list-tile>
                 </v-list>
 

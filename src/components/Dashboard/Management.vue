@@ -8,7 +8,7 @@
                             v-for="user in patients"
                             :key="user.name"
                             avatar
-                            @click=""
+                            @click="getEventByPatient(user._id)"
                     >
                         <v-list-tile-avatar>
                             <img v-if="user.avatar" :src="user.avatar">
@@ -38,6 +38,7 @@
 
 <script>
     import _ from 'lodash';
+    import axios from 'axios';
 	export default {
 		name: "Management",
 		 beforeCreate() {
@@ -49,6 +50,7 @@
         },
 		data () {
 			return {
+                loading: false,
 				users: [
 					{ active: true, name: 'Jason Oner', email: "user1@gmail.com", avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
 					{ active: true, name: 'Ranee Carlson', email: "user2@gmail.com",avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
@@ -57,6 +59,23 @@
 				],
 			}
 		},
+        methods: {
+            getEventByPatient(_id) {
+                axios.get(`/api/user/${_id}`)
+                    .then((res) => {
+                        this.loading = false;
+                        console.log(res.data);
+                    }).catch((err) => {
+                    this.loading = false;
+                    console.log(err);
+                    let message = err.message || 'Щось сталось не так :(';
+                    if (err.response && err.response.data && err.response.data.message) {
+                        message = err.response.data.message;
+                    }
+                    this.$notificator('error', message);
+                });
+            },
+        },
         computed: {
 			patients() {
 				return this.$store.getters.patients;

@@ -10,7 +10,7 @@
             <v-layout row wrap main-items>
                 <v-flex xs8 offset-xs2 md6 offset-md3>
                     <h2>
-                        Оберіть лікара
+                        Оберіть лікаря
                     </h2>
 
                     <v-form v-model="isFormValid" name="newEventForm">

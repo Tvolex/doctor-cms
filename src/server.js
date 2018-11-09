@@ -3,7 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
 const bodyParser = require ('body-parser');
-const session = require ('express-session');
+const favicon = require('serve-favicon');
 const cookieParser = require ('cookie-parser');
 const proxy = require('http-proxy-middleware');
 const { API_HOST, PORT } = require('./config');
@@ -12,6 +12,7 @@ const app = express();
 app.set('views', path.join(__dirname, '../dist'));
 app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, '../dist')));
+app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
 
 app.use(cors());
 app.use(cookieParser('Kvb6swFdB&m66sk4aSB9pSKm'));

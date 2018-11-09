@@ -69,10 +69,13 @@
                             large
                             round
                             color="success"
-                            v-on:click.native="create"
-                            :disabled="!isFormValid">
-
+                            :loading="loading"
+                            :disabled="!isFormValid"
+                            @click="create">
                         Далі
+                        <span slot="loader" class="custom-loader">
+                            <v-icon light>cached</v-icon>
+                        </span>
                     </v-btn>
                 </v-flex>
             </v-layout>
@@ -94,6 +97,7 @@
         components: {},
 		data() {
 			return {
+                loading: false,
 				isFormValid: false,
 				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
 				doctors: null,
@@ -157,15 +161,35 @@
 				});
 			},
 			isDoctorBusy() {
-				axios.get(`/api/user/${this.doctor}`, {
-					params: {
-						date: this.date,
-					},
-				}).then((res) => {
+                this.loading = true;
+                this.isFormValid = false;
 
+                const [ hour, minute ] = this.time.split(':');
+                const fullDate = moment(this.date)
+                    .set('hour', hour)
+                    .set('minute', minute)
+                    .startOf('second')
+                    .format();
+
+				axios.get(`/api/event/busy`, {
+				    params: {
+                        doctor: this.doctor,
+                        fullDate
+                    }
+				}).then((res) => {
+                    if (!res.data) {
+                        this.loading = false;
+                        this.isFormValid = true;
+
+                        return this.$router.push('/register');
+                    }
+
+                    this.$notificator('warning', 'Нажаль лікар зайнятий на цей час, будь-ласка виберіть інший!')
+                    this.loading = false;
+                    this.isFormValid = false;
 				}).catch((err) => {
 					console.log(err);
-
+                    return true;
 				});
             },
             create: function () {
@@ -179,9 +203,7 @@
 							time: this.time,
 						}
 					});
-
-					this.$router.push('/register');
-
+					this.isDoctorBusy();
                 }
 			}
 		},
@@ -189,9 +211,6 @@
 			specialization(value, oldValue) {
 				this.getDoctors();
 			},
-			doctor(value, oldValue) {
-				this.isDoctorBusy();
-			}
 		}
 	}
 </script>

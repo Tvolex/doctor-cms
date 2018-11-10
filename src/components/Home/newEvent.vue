@@ -48,9 +48,9 @@
                                         outline
                                 ></v-select>
                             </v-flex>
-                            <v-flex xs12 v-if="doctor">
+                            <v-flex xs12 v-if="doctor && date">
                                 <v-select
-                                        :items="availableHours()"
+                                        :items="times"
                                         v-model="time"
                                         label="Оберіть час"
                                         single-line
@@ -103,7 +103,8 @@
 				doctors: null,
 				specialization: null,
 				doctor: null,
-				date: moment().format("YYYY-MM-DD"),
+				date: null,
+                times: null,
 				time: null,
 				specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
 				doctorRules: [(v)=> !!v || 'Вибір лікара обов`язковий!'],
@@ -112,27 +113,12 @@
 			}
 		},
 		methods: {
-			availableHours: function () {
-				const range = moment
-					.range(
-						moment()
-							.set('hour', 10)
-							.startOf('hour')
-							.startOf('minute'),
-						moment()
-							.set('hour', 18)
-							.startOf('minute')
-					);
-				const hours = Array.from(range.by('hour', { excludeEnd: true }));
-				return hours.map(m => m.format('HH:mm'));
-            },
 			availableDates: function () {
-
 				const range = moment
 					.range(
 						moment(),
 						moment()
-							.week(moment().week() + 1)
+							.week(moment().week() + 2)
 							.startOf('week'),
 					);
 				const dates = Array.from(range.by('days'));
@@ -144,6 +130,34 @@
 				});
 
 				return workDays.filter(day => !!day);
+			},
+			getAvailableTimes: function () {
+				// const range = moment
+				// 	.range(
+				// 		moment()
+				// 			.set('hour', 10)
+				// 			.startOf('hour')
+				// 			.startOf('minute'),
+				// 		moment()
+				// 			.set('hour', 18)
+				// 			.startOf('minute')
+				// 	);
+				// const hours = Array.from(range.by('hour', { excludeEnd: true }));
+				// return hours.map(m => m.format('HH:mm'));
+
+				const fullDate = moment(this.date).format();
+
+				axios.get(`/api/event/times`, {
+					params: {
+						doctor: this.doctor,
+						fullDate,
+					},
+				}).then((res) => {
+					this.times = res.data;
+				}).catch((err) => {
+					console.log(err);
+					this.times = null;
+				});
 			},
 			getDoctors () {
 				axios.get(`/api/user`, {
@@ -210,6 +224,9 @@
 		watch: {
 			specialization(value, oldValue) {
 				this.getDoctors();
+			},
+			date(value, oldValue) {
+				this.getAvailableTimes();
 			},
 		}
 	}

@@ -2,7 +2,11 @@
     <v-container fluid>
         <v-layout row wrap main-items>
             <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
-                <h2>
+                <div class="pa-2">
+                    <router-link to="/dashboard/newPatient">Додати нового пацієнта</router-link> |
+                    <router-link to="/dashboard/newDoctor">Додати нового лікаря</router-link>
+                </div>
+                <h2 class="pa-2">
                     Введіть дані про нового пацієнта
                 </h2>
                 <v-form v-model="isFormValid" name="registerForm">
@@ -205,7 +209,7 @@
 		},
         methods: {
 			Create: function () {
-                axios.post('api/user/', {
+                axios.post('/api/user/', {
                     newPatient: {
                         email: this.email,
                         name: this.name,

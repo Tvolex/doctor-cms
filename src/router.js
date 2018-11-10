@@ -68,14 +68,19 @@ export default new Router({
 			name: "newPatient",
 			component: Dashboard
 		},
+		{
+			path: "/dashboard/newDoctor",
+			name: "newDoctor",
+			component: Dashboard
+		},
         {
             path: "/dashboard/findPatient",
-            name: "newPatient",
+            name: "findPatient",
             component: Dashboard
         },
 		{
 			path: "/dashboard/management",
-			name: "newPatient",
+			name: "management",
 			component: Dashboard
 		},
 		{

@@ -145,7 +145,7 @@
 				// const hours = Array.from(range.by('hour', { excludeEnd: true }));
 				// return hours.map(m => m.format('HH:mm'));
 
-				const fullDate = moment(this.date).utc().format();
+				const fullDate = moment(this.date).format("YYYY-MM-DD:HH-mm");
 
 				axios.get(`/api/event/times`, {
 					params: {

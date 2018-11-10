@@ -26,7 +26,8 @@
                 <v-list light dense>
                     <v-list-tile avatar>
                         <v-list-tile-avatar>
-                            <img :src="user.avatar">
+                            <img v-if="user.avatar" :src="user.avatar">
+                            <img v-else src="@/assets/person.png">
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                             <v-list-tile-title> {{user.name}} </v-list-tile-title>

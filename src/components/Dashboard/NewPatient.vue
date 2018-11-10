@@ -202,9 +202,15 @@
                 birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
                 cityRules: [v => !!v || 'Місто обов`язкове!'],
                 streetRules: [v => !!v || 'Вулиця обов`язкова!'],
-                houseRules: [v => !!v || 'Будинок обов`язкови!'],
+                houseRules: [
+                	v => !!v || 'Будинок обов`язкови!',
+					v => _.isInteger(v) || 'Номер будинка позначається числом!'
+                ],
                 passportSeriesRules: [v => !!v || 'Серія паспорта обов`язкова!'],
-                passportNumberRules: [v => !!v || 'Номер паспорта обов`язковий!'],
+                passportNumberRules: [
+                	v => !!v || 'Номер паспорта обов`язковий!',
+                    v => _.isInteger(v) || 'Номер паспорта складається з цифр!'
+                ],
 			}
 		},
         methods: {
@@ -215,7 +221,7 @@
                         name: this.name,
                         surname: this.surname,
                         patronymic: this.patronymic,
-                        birthdate: this.birthdate,
+                        birthdate: moment(this.birthdate).format("YYYY-MM-DD"),
                         city: this.city,
                         street: this.street,
                         house: this.house,

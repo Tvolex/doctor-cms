@@ -3,7 +3,7 @@
         <v-toolbar dark color="teal lighten-3" >
 
             <v-toolbar-side-icon @click="statusNavBar = !statusNavBar"></v-toolbar-side-icon>
-
+            <v-divider vertical inset></v-divider>
             <v-toolbar-title >Dashboard</v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -11,13 +11,13 @@
             <v-btn icon>
                 <v-icon>search</v-icon>
             </v-btn>
-
+            <v-divider vertical inset></v-divider>
             <v-btn icon>
                 <router-link to="/dashboard/calendar">
                     <v-icon>date_range</v-icon>
                 </router-link>
             </v-btn>
-
+            <v-divider vertical inset></v-divider>
             <v-btn icon>
                 <v-icon>more_vert</v-icon>
             </v-btn>
@@ -91,8 +91,8 @@
 				dashboardNavigation: [
 					{title: 'Статистика', icon: 'show_chart',route: '/dashboard'},
 					{title: 'Календар', icon: 'date_range', route: '/dashboard/calendar'},
-					{title: 'Менеджмент', icon: 'people', route: '/dashboard/management'},
-					{title: 'Новий пацієнт', icon: 'add', route: '/dashboard/newPatient'},
+					{title: 'Пацієнти', icon: 'people', route: '/dashboard/management'},
+					{title: 'Додати нового', icon: 'add', route: '/dashboard/newPatient'},
 					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},
 				],
                 userNavigation: [

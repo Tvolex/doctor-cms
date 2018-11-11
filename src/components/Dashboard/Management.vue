@@ -1,72 +1,149 @@
 <template>
-    <v-layout row>
-        <v-flex xs12 md6 lg4 offset-lg1 >
-            <v-card class="ma-3">
-                <v-list subheader>
-                    <v-subheader>Пацієнти</v-subheader>
-                    <v-list-tile
-                            v-for="user in patients"
-                            :key="user.fullName"
-                            avatar
-                            @click="getEventsByPatient(user._id)"
-                    >
-                        <v-list-tile-avatar>
-                            <img v-if="user.avatar" :src="user.avatar">
-                            <img v-else src="@/assets/person.png" alt="">
-                        </v-list-tile-avatar>
+    <div>
+        <div v-if="detectIsMobile()">
+            <v-layout row>
+                <v-flex xs12  v-if="!selected">
+                    <v-scroll-x-transition mode="out-in">
+                        <v-card class="ma-3">
+                            <v-list subheader>
+                                <v-subheader>Пацієнти</v-subheader>
+                                <v-list-tile
+                                        v-for="user in patients"
+                                        :key="user.fullName"
+                                        avatar
+                                        @click="getEventsByPatient(user._id)"
+                                >
+                                    <v-list-tile-avatar>
+                                        <img v-if="user.avatar" :src="user.avatar">
+                                        <img v-else src="@/assets/person.png" alt="">
+                                    </v-list-tile-avatar>
 
-                        <v-layout align-center justify-center row wrap>
-                            <v-flex xs12 sm6 lm5 md6>
-                                <v-list-tile-content>
-                                    <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-flex>
-                            <v-flex xs12 sm6 lm5 md6>
-                                <v-list-tile-content>
-                                    <v-list-tile-title v-html="user.email"></v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-flex>
-                        </v-layout>
-                    </v-list-tile>
-                </v-list>
-                <v-divider></v-divider>
-            </v-card>
-        </v-flex>
-        <v-flex xs12 md6 lg4 offset-lg1 v-if="selected">
-            <v-scroll-y-transition mode="out-in">
-                <v-card
-                        :key="selected._id"
-                        class="ma-3"
-                        color="#fffacd"
-                >
-                    <v-btn class="green--text darken-1" flat @click="selected = null">Закрити</v-btn>
-                    <v-card-text>
-                        <v-avatar
-                                size="88"
+                                    <v-layout align-center justify-center row wrap>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="user.email"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-list-tile>
+                            </v-list>
+                            <v-divider></v-divider>
+                        </v-card>
+                    </v-scroll-x-transition>
+
+                </v-flex>
+                <v-flex xs12 v-if="selected">
+                    <v-scroll-x-reverse-transition mode="out-in">
+                        <v-card class="ma-3"
+                                :key="selected._id"
+                                color="#fffacd"
                         >
-                            <img v-if="selected.avatar" :src="selected.avatar">
-                            <img v-else src="@/assets/person.png">
-                        </v-avatar>
-                        <h3 class="headline mb-2">
-                            {{ selected.name }}
-                        </h3>
-                        <div class="blue--text mb-2">{{ selected.email }}</div>
-                        <div class="blue--text subheading font-weight-bold">{{ selected.fullName }}</div>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-layout
-                            tag="v-card-text"
-                            text-md-center
-                            wrap
-                    >
-                        <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
-                        <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
-                        <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
-                    </v-layout>
-                </v-card>
-            </v-scroll-y-transition>
-        </v-flex>
-    </v-layout>
+                            <v-btn class="green--text darken-1" flat @click="selected = null">Закрити</v-btn>
+                            <v-card-text>
+                                <v-avatar
+                                        size="88"
+                                >
+                                    <img v-if="selected.avatar" :src="selected.avatar">
+                                    <img v-else src="@/assets/person.png">
+                                </v-avatar>
+                                <h3 class="headline mb-2">
+                                    {{ selected.name }}
+                                </h3>
+                                <div class="blue--text mb-2">{{ selected.email }}</div>
+                                <div class="blue--text subheading font-weight-bold">{{ selected.fullName }}</div>
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-layout
+                                    tag="v-card-text"
+                                    text-md-center
+                                    wrap
+                            >
+                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
+                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
+                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
+                            </v-layout>
+                        </v-card>
+                    </v-scroll-x-reverse-transition>
+                </v-flex>
+            </v-layout>
+        </div>
+        <div v-if="!detectIsMobile()" >
+            <v-layout row>
+                <v-flex xs12 md6 lg4 offset-lg1 >
+                    <v-card class="ma-3">
+                        <v-list subheader>
+                            <v-subheader>Пацієнти</v-subheader>
+                            <v-list-tile
+                                    v-for="user in patients"
+                                    :key="user.fullName"
+                                    avatar
+                                    @click="getEventsByPatient(user._id)"
+                            >
+                                <v-list-tile-avatar>
+                                    <img v-if="user.avatar" :src="user.avatar">
+                                    <img v-else src="@/assets/person.png" alt="">
+                                </v-list-tile-avatar>
+
+                                <v-layout align-center justify-center row wrap>
+                                    <v-flex xs12 sm6 lm5 md6>
+                                        <v-list-tile-content>
+                                            <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
+                                        </v-list-tile-content>
+                                    </v-flex>
+                                    <v-flex xs12 sm6 lm5 md6>
+                                        <v-list-tile-content>
+                                            <v-list-tile-title v-html="user.email"></v-list-tile-title>
+                                        </v-list-tile-content>
+                                    </v-flex>
+                                </v-layout>
+                            </v-list-tile>
+                        </v-list>
+                        <v-divider></v-divider>
+                    </v-card>
+                </v-flex>
+                <v-flex xs12 md6 lg4 offset-lg1 v-if="selected">
+                    <v-scroll-y-transition mode="out-in">
+                        <v-card
+                                :key="selected._id"
+                                class="ma-3"
+                                color="#fffacd"
+                        >
+                            <v-btn class="green--text darken-1" flat @click="selected = null">Закрити</v-btn>
+                            <v-card-text>
+                                <v-avatar
+                                        size="88"
+                                >
+                                    <img v-if="selected.avatar" :src="selected.avatar">
+                                    <img v-else src="@/assets/person.png">
+                                </v-avatar>
+                                <h3 class="headline mb-2">
+                                    {{ selected.name }}
+                                </h3>
+                                <div class="blue--text mb-2">{{ selected.email }}</div>
+                                <div class="blue--text subheading font-weight-bold">{{ selected.fullName }}</div>
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-layout
+                                    tag="v-card-text"
+                                    text-md-center
+                                    wrap
+                            >
+                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
+                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
+                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
+                            </v-layout>
+                        </v-card>
+                    </v-scroll-y-transition>
+                </v-flex>
+            </v-layout>
+        </div>
+    </div>
+
 </template>
 
 <script>

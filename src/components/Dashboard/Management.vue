@@ -138,13 +138,12 @@
                                 <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
 
                             </v-layout>
-                            <v-list subheader class="light-green accent-1">
+                            <v-list subheader >
                                 <v-subheader>Записи</v-subheader>
                                 <v-list-tile
                                         v-for="event in selected.events"
                                         :key="event._id"
                                         avatar
-                                        @click="changeEventStatus(event._id)"
                                 >
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs12 sm6 lm5 md6>
@@ -152,9 +151,32 @@
                                                 <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs12 sm6 lm5 md6>
+                                        <v-flex xs12 sm6 lm5 md3>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs12 sm6 lm5 md3>
+                                            <v-list-tile-content>
+                                                <v-menu>
+                                                    <v-btn
+                                                            slot="activator"
+                                                            light
+                                                            icon
+                                                    >
+                                                        <v-icon>more_vert</v-icon>
+                                                    </v-btn>
+
+                                                    <v-list>
+                                                        <v-list-tile
+                                                                v-for="(item, i) in items"
+                                                                :key="i"
+                                                                @click="item.method(event._id)"
+                                                        >
+                                                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                                                        </v-list-tile>
+                                                    </v-list>
+                                                </v-menu>
                                             </v-list-tile-content>
                                         </v-flex>
                                     </v-layout>
@@ -173,6 +195,8 @@
     import _ from 'lodash';
     import moment from 'moment';
     import axios from 'axios';
+    import { EVENT_STATUS } from '../../const';
+
 	export default {
 		name: "Management",
 		 beforeCreate() {
@@ -186,6 +210,10 @@
 			return {
                 loading: false,
                 selected: null,
+				items: [
+					{ title: 'Edit', method: (_id, option) => console.log(`Edit event: ${_id}, options: ${option}`)},
+					{ title: 'Delete', method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
+				]
 			}
 		},
         methods: {
@@ -206,8 +234,22 @@
                     this.$notificator('error', message);
                 });
             },
-            changeEventStatus(id) {
-			    console.log(id);
+            changeEventStatus(_id, status) {
+				axios.put(`/api/event/status/${_id}`, {
+					status
+                })
+					.then((res) => {
+						this.loading = false;
+						console.log(res.data);
+					}).catch((err) => {
+					this.loading = false;
+					console.log(err);
+					let message = err.message || 'Щось сталось не так :(';
+					if (err.response && err.response.data && err.response.data.message) {
+						message = err.response.data.message;
+					}
+					this.$notificator('error', message);
+				});
             }
         },
         computed: {

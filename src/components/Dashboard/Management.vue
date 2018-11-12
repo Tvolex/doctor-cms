@@ -74,7 +74,7 @@
         </div>
         <div v-if="!detectIsMobile()" >
             <v-layout row>
-                <v-flex xs12 md6 lg4 offset-lg1 >
+                <v-flex xs12 md6 lg5>
                     <v-card class="ma-3">
                         <v-list subheader>
                             <v-subheader>Пацієнти</v-subheader>
@@ -106,8 +106,8 @@
                         <v-divider></v-divider>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 md6 lg4 offset-lg1 v-if="selected">
-                    <v-scroll-y-transition mode="out-in">
+                <v-flex xs12 md6 lg7 v-if="selected">
+                    <v-scroll-y-reverse-transition mode="out-in">
                         <v-card
                                 :key="selected._id"
                                 class="ma-3"
@@ -136,9 +136,32 @@
                                 <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
                                 <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
                                 <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
+
                             </v-layout>
+                            <v-list subheader class="light-green accent-1">
+                                <v-subheader>Записи</v-subheader>
+                                <v-list-tile
+                                        v-for="event in selected.events"
+                                        :key="event._id"
+                                        avatar
+                                        @click="changeEventStatus(event._id)"
+                                >
+                                    <v-layout align-center justify-center row wrap>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-list-tile>
+                            </v-list>
                         </v-card>
-                    </v-scroll-y-transition>
+                    </v-scroll-y-reverse-transition>
                 </v-flex>
             </v-layout>
         </div>
@@ -183,6 +206,9 @@
                     this.$notificator('error', message);
                 });
             },
+            changeEventStatus(id) {
+			    console.log(id);
+            }
         },
         computed: {
 			patients() {
@@ -193,5 +219,7 @@
 </script>
 
 <style scoped>
-
+    .eventsList {
+        background-color: #59fb6075;
+    }
 </style>

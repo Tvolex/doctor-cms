@@ -2,31 +2,30 @@
     <div>
         <div v-if="detectIsMobile()">
             <v-layout row>
-                <v-flex xs12  v-if="!selected">
+                <v-flex xs12  v-if="!selectedPatient">
                     <v-scroll-x-transition mode="out-in">
                         <v-card class="ma-3">
                             <v-list subheader>
                                 <v-subheader>Пацієнти</v-subheader>
                                 <v-list-tile
-                                        v-for="user in patients"
-                                        :key="user.fullName"
-                                        avatar
-                                        @click="getEventsByPatient(user._id)"
+                                        v-for="patient in patients"
+                                        :key="patient._id"
+                                        @click="getEventsByPatient(patient._id)"
                                 >
                                     <v-list-tile-avatar>
-                                        <img v-if="user.avatar" :src="user.avatar">
+                                        <img v-if="patient.avatar" :src="patient.avatar">
                                         <img v-else src="@/assets/person.png" alt="">
                                     </v-list-tile-avatar>
 
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs12 sm6 lm5 md6>
                                             <v-list-tile-content>
-                                                <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
+                                                <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
                                         <v-flex xs12 sm6 lm5 md6>
                                             <v-list-tile-content>
-                                                <v-list-tile-title v-html="user.email"></v-list-tile-title>
+                                                <v-list-tile-title v-html="patient.email"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
                                     </v-layout>
@@ -37,25 +36,26 @@
                     </v-scroll-x-transition>
 
                 </v-flex>
-                <v-flex xs12 v-if="selected">
+                <v-flex xs12 v-if="selectedPatient">
                     <v-scroll-x-reverse-transition mode="out-in">
                         <v-card class="ma-3"
-                                :key="selected._id"
+                                :key="selectedPatient._id"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="selected = null">Закрити</v-btn>
+                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
+                            <v-divider></v-divider>
                             <v-card-text>
                                 <v-avatar
                                         size="88"
                                 >
-                                    <img v-if="selected.avatar" :src="selected.avatar">
+                                    <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
                                     <img v-else src="@/assets/person.png">
                                 </v-avatar>
                                 <h3 class="headline mb-2">
-                                    {{ selected.name }}
+                                    {{ selectedPatient.name }}
                                 </h3>
-                                <div class="blue--text mb-2">{{ selected.email }}</div>
-                                <div class="blue--text subheading font-weight-bold">{{ selected.fullName }}</div>
+                                <div class="blue--text mb-2">{{ selectedPatient.email }}</div>
+                                <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
                             </v-card-text>
                             <v-divider></v-divider>
                             <v-layout
@@ -63,14 +63,68 @@
                                     text-md-center
                                     wrap
                             >
-                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
-                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
-                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
+                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{
+                                selectedPatient.birthdate }}</v-flex>
+                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{
+                                selectedPatient.passportSeries }}</v-flex>
+                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
+                                selectedPatient.passportNumber }}</v-flex>
                             </v-layout>
+                            <v-list subheader >
+                                <v-subheader>Записи</v-subheader>
+                                <v-list-tile
+                                        v-for="event in selectedPatient.events"
+                                        :key="event._id"
+                                        @click="selectedEvent = event"
+                                >
+                                    <v-layout align-center justify-space-around row wrap>
+                                        <v-flex xs6 >
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-list-tile>
+                            </v-list>
                         </v-card>
                     </v-scroll-x-reverse-transition>
                 </v-flex>
             </v-layout>
+            <v-dialog
+                    v-if="selectedPatient && selectedEvent"
+                    v-model="eventDetailsDialog"
+                    max-width="290"
+            >
+                <v-card>
+                    <v-card-title class="headline">Деталі</v-card-title>
+
+                    <v-card-text>
+                        Пацієнт: {{selectedPatient.fullName}}
+                    </v-card-text>
+                    <v-card-text>
+                        Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                                v-for="(item, i) in eventActions"
+                                :key="i"
+                                flat="flat"
+                                :color="item.color"
+                                @click="item.method(selectedEvent._id)"
+                        >
+                            {{item.title}}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
         <div v-if="!detectIsMobile()" >
             <v-layout row>
@@ -106,26 +160,26 @@
                         <v-divider></v-divider>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 md6 lg7 v-if="selected">
+                <v-flex xs12 md6 lg7 v-if="selectedPatient">
                     <v-scroll-y-reverse-transition mode="out-in">
                         <v-card
-                                :key="selected._id"
+                                :key="selectedPatient._id"
                                 class="ma-3"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="selected = null">Закрити</v-btn>
+                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                             <v-card-text>
                                 <v-avatar
                                         size="88"
                                 >
-                                    <img v-if="selected.avatar" :src="selected.avatar">
+                                    <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
                                     <img v-else src="@/assets/person.png">
                                 </v-avatar>
                                 <h3 class="headline mb-2">
-                                    {{ selected.name }}
+                                    {{ selectedPatient.name }}
                                 </h3>
-                                <div class="blue--text mb-2">{{ selected.email }}</div>
-                                <div class="blue--text subheading font-weight-bold">{{ selected.fullName }}</div>
+                                <div class="blue--text mb-2">{{ selectedPatient.email }}</div>
+                                <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
                             </v-card-text>
                             <v-divider></v-divider>
                             <v-layout
@@ -133,30 +187,33 @@
                                     text-md-center
                                     wrap
                             >
-                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{ selected.birthdate }}</v-flex>
-                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{ selected.passportSeries }}</v-flex>
-                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{ selected.passportNumber }}</v-flex>
+                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{
+                                selectedPatient.birthdate }}</v-flex>
+                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{
+                                selectedPatient.passportSeries }}</v-flex>
+                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
+                                selectedPatient.passportNumber }}</v-flex>
 
                             </v-layout>
                             <v-list subheader >
                                 <v-subheader>Записи</v-subheader>
                                 <v-list-tile
-                                        v-for="event in selected.events"
+                                        v-for="event in selectedPatient.events"
                                         :key="event._id"
                                         avatar
                                 >
                                     <v-layout align-center justify-center row wrap>
-                                        <v-flex xs12 sm6 lm5 md6>
+                                        <v-flex xs6 sm4 offset-sm1 md3 offset-md1>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs12 sm6 lm5 md3>
+                                        <v-flex xs4 sm4 md3 offset-md1>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs12 sm6 lm5 md3>
+                                        <v-flex xs2 sm2 md2>
                                             <v-list-tile-content>
                                                 <v-menu>
                                                     <v-btn
@@ -169,7 +226,7 @@
 
                                                     <v-list>
                                                         <v-list-tile
-                                                                v-for="(item, i) in items"
+                                                                v-for="(item, i) in eventActions"
                                                                 :key="i"
                                                                 @click="item.method(event._id)"
                                                         >
@@ -209,10 +266,12 @@
 		data () {
 			return {
                 loading: false,
-                selected: null,
-				items: [
-					{ title: 'Edit', method: (_id, option) => console.log(`Edit event: ${_id}, options: ${option}`)},
-					{ title: 'Delete', method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
+                selectedEvent: null,
+                selectedPatient: null,
+                eventDetailsDialog: false,
+				eventActions: [
+					{ title: 'Редагувати', color: "green darken-1", method: (_id, option) => console.log(`Edit event: ${_id}, options: ${option}`)},
+					{ title: 'Відмінити', color: "red darken-1", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
 				]
 			}
 		},
@@ -221,11 +280,11 @@
                 axios.get(`/api/user/${_id}`)
                     .then((res) => {
                         this.loading = false;
-						this.selected = res.data;
+						this.selectedPatient = res.data;
                         console.log(res.data);
                     }).catch((err) => {
                     this.loading = false;
-                    this.selected = null;
+                    this.selectedPatient = null;
                     console.log(err);
                     let message = err.message || 'Щось сталось не так :(';
                     if (err.response && err.response.data && err.response.data.message) {
@@ -235,26 +294,40 @@
                 });
             },
             changeEventStatus(_id, status) {
-				axios.put(`/api/event/status/${_id}`, {
-					status
+                axios.put(`/api/event/status/${_id}`, {
+                    status
                 })
-					.then((res) => {
-						this.loading = false;
-						console.log(res.data);
-					}).catch((err) => {
-					this.loading = false;
-					console.log(err);
-					let message = err.message || 'Щось сталось не так :(';
-					if (err.response && err.response.data && err.response.data.message) {
-						message = err.response.data.message;
-					}
-					this.$notificator('error', message);
-				});
+                    .then((res) => {
+                        this.loading = false;
+                        this.$notificator(res.data.type, res.data.message);
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                        let message = err.message || 'Щось сталось не так :(';
+                        if (err.response && err.response.data && err.response.data.message) {
+                            message = err.response.data.message;
+                        }
+                        this.$notificator('error', message);
+                }).finally(() => {
+                    this.$store.dispatch({type: "patients"}).then(patients => {
+                        const patient = patients.find(patient => _.isEqual(this.selectedPatient._id, patient._id));
+                        this.selectedPatient = patient ? this.getEventsByPatient(patient._id): null;
+                        this.eventDetailsDialog = false;
+                        this.selectedEvent = null;
+                    });
+                })
             }
         },
         computed: {
 			patients() {
 				return this.$store.getters.patients;
+            }
+        },
+        watch: {
+		    selectedEvent (val, oldVal) {
+		        if (!!val)
+		            this.eventDetailsDialog = true
             }
         }
 	}

@@ -1,5 +1,5 @@
-<template>
-    <div v-if="auth && user">
+<template >
+    <div v-if="auth && user" class="Dashboard">
         <Navbar :user="user"></Navbar>
         <main>
             <Statistics v-show="route === ('/dashboard' || '/dashboard/')"></Statistics>
@@ -10,7 +10,6 @@
             <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')"></Settings>
         </main>
     </div>
-
 </template>
 
 <script>
@@ -63,3 +62,12 @@
         },
     }
 </script>
+
+<style scoped>
+
+    .Dashboard {
+        background: transparent url("../assets/background.jpeg") !important;
+        background-size: cover;
+        height: 100%;
+    }
+</style>

@@ -23,3 +23,9 @@
 
     };
 </script>
+<style scoped>
+    .home {
+        background: transparent url("../assets/background.jpeg") !important;
+        height: 100%;
+    }
+</style>

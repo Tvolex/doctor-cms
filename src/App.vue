@@ -7,7 +7,10 @@
     </div>
 </template>
 
-<style>
+<style >
+    .theme--light.application {
+        background: transparent !important;
+    }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

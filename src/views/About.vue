@@ -9,3 +9,10 @@
         <h1>About medical center</h1>
     </div>
 </template>
+
+<style scoped>
+    .About {
+        background: transparent url("../assets/background.jpeg") !important;
+        height: 100%;
+    }
+</style>

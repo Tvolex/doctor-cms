@@ -115,6 +115,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .Login {
+        background: transparent url("../assets/background.jpeg") !important;
+        height: 100%;
+    }
     h3 {
         margin: 40px 0 0;
     }

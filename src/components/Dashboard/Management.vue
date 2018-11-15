@@ -333,7 +333,7 @@
 	}
 </script>
 
-<style scoped>
+<style >
     .eventsList {
         background-color: #59fb6075;
     }

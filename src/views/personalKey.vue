@@ -29,7 +29,7 @@
                         <v-flex xs12>
                             <v-btn large round color="success"
                                    :loading="loading"
-                                   :disabled="!isFormValid"
+                                   :disabled="!isFormValid || loading"
                                    @click="Create">
                                 Записатись
                                 <span slot="loader" class="custom-loader">

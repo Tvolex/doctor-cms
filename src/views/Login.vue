@@ -41,7 +41,18 @@
                             </v-layout>
                             <v-layout>
                                 <v-flex xs12>
-                                    <v-btn large round color="success" v-on:click.native="Login">Вхід</v-btn>
+                                    <v-btn
+                                            large
+                                            round
+                                            :loading="loading"
+                                            :disabled="!isFormValid || loading"
+                                            color="success"
+                                            @click.native="Login">
+                                        Вхід
+                                        <span slot="loader" class="custom-loader">
+                                            <v-icon light>cached</v-icon>
+                                        </span>
+                                    </v-btn>
                                 </v-flex>
                             </v-layout>
                         </v-form>
@@ -63,6 +74,7 @@
         data() {
             return {
                 isFormValid: false,
+                loading: false,
                 email: null,
                 password: null,
                 passwordRules: [
@@ -86,6 +98,7 @@
         methods: {
             Login: async function() {
                 if (this.isFormValid) {
+                    this.loading = true;
                     try {
                         const res = await axios.post(`/api/auth/login`, {
                             email: this.email,
@@ -93,12 +106,14 @@
                         });
                         this.$store.commit("user", {type: "user", value: res.data});
                         this.$router.push('/dashboard');
+                        this.loading = false;
                     }   catch (err) {
                     	console.log(err);
                     	let message = 'Щось сталось не так :(';
                     	if (err.response && err.response.data && err.response.data.message) {
 							message = err.response.data.message;
                         }
+                        this.loading = false;
 						return this.$notificator('error', message);
                     }
 

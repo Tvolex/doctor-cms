@@ -38,21 +38,48 @@
                                 ></v-select>
                             </v-flex>
                             <v-flex xs12 v-if="doctor">
-                                <v-select
-                                        :items="availableDates()"
-                                        v-model="date"
-                                        label="Оберіть дату"
-                                        :rules="dateRules"
-                                        single-line
-                                        required
-                                        outline
-                                ></v-select>
+                                <v-menu
+                                        v-model="isDatePickerActive"
+                                        :close-on-content-click="false"
+                                        full-width
+                                        max-width="290"
+                                >
+                                    <v-text-field
+                                            slot="activator"
+                                            :value="formatDate"
+                                            clearable
+                                            label="Дата"
+                                            readonly
+                                            required
+                                            outline
+                                    ></v-text-field>
+                                    <v-date-picker
+                                            v-model="date"
+                                            label="Дата"
+                                            class="mt-3"
+                                            :allowed-dates="isWorkDay"
+                                            :rules="dateRules"
+                                            :min="new Date().toISOString()"
+                                            required
+                                            outline
+                                    ></v-date-picker>
+                                </v-menu>
+
+                                <!--<v-select-->
+                                        <!--:items="availableDates()"-->
+                                        <!--v-model="date"-->
+                                        <!--label="Оберіть дату"-->
+                                        <!--:rules="dateRules"-->
+                                        <!--single-line-->
+                                        <!--required-->
+                                        <!--outline-->
+                                <!--&gt;</v-select>-->
                             </v-flex>
                             <v-flex xs12 v-if="doctor && date">
                                 <v-select
                                         :items="times"
                                         v-model="time"
-                                        label="Оберіть час"
+                                        label="Час"
                                         single-line
                                         :rules="timeRules"
                                         required
@@ -70,7 +97,7 @@
                             round
                             color="success"
                             :loading="loading"
-                            :disabled="!isFormValid"
+                            :disabled="!isFormValid || loading"
                             @click="create">
                         Далі
                         <span slot="loader" class="custom-loader">
@@ -97,6 +124,7 @@
         components: {},
 		data() {
 			return {
+                isDatePickerActive: false,
                 loading: false,
 				isFormValid: false,
 				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
@@ -104,7 +132,7 @@
 				specialization: null,
 				doctor: null,
 				date: null,
-                times: null,
+                times: [],
 				time: null,
 				specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
 				doctorRules: [(v)=> !!v || 'Вибір лікара обов`язковий!'],
@@ -112,6 +140,12 @@
 				timeRules: [(v)=> !!v || 'Час обов`язковий!'],
 			}
 		},
+        computed: {
+            formatDate() {
+                return this.date ? moment(this.date).lang('uk').format('dddd, MMMM Do YYYY')
+                    : null
+            },
+        },
 		methods: {
 			availableDates: function () {
 				const range = moment
@@ -131,6 +165,9 @@
 
 				return workDays.filter(day => !!day);
 			},
+            isWorkDay: function(date) {
+			    return ![0, 6].includes(moment(date).day());
+            },
 			getAvailableTimes: function () {
 				// const range = moment
 				// 	.range(
@@ -209,7 +246,7 @@
             create: function () {
 
 				if (this.isFormValid) {
-
+				    this.loading = true;
 					this.$store.commit('event', {type: 'event', value: {
 							specialization: this.specialization,
 							doctor: this.doctor,
@@ -218,6 +255,7 @@
 						}
 					});
 					this.isDoctorBusy();
+					this.loading = false;
                 }
 			}
 		},
@@ -232,6 +270,3 @@
 	}
 </script>
 
-<style scoped>
-
-</style>

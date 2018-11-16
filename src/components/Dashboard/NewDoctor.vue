@@ -88,9 +88,6 @@
     import axios from 'axios';
 	export default {
 		name: "newDoctor",
-		props: {
-			user: Object
-		},
 		data() {
 			return {
                 loading: false,
@@ -114,6 +111,11 @@
                 surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
                 patronymicRules: [v => !!v || 'ПО батькові обов`язкове!'],
 			}
+		},
+		computed: {
+			user: function () {
+				return this.$store.getters.user;
+			},
 		},
         methods: {
 			Create: function () {

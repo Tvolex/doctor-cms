@@ -174,9 +174,6 @@
     import axios from 'axios';
 	export default {
 		name: "newPatient",
-		props: {
-			user: Object
-		},
 		data() {
 			return {
                 loading: false,
@@ -215,6 +212,11 @@
                     v => _.isInteger(v) || 'Номер паспорта складається з цифр!'
                 ],
 			}
+		},
+		computed: {
+			user: function () {
+				return this.$store.getters.user;
+			},
 		},
         methods: {
 			Create: function () {

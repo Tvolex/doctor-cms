@@ -6,7 +6,8 @@
             <Calendar v-show="route === ('/dashboard/calendar' || '/dashboard/calendar')"></Calendar>
             <NewPatient v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')"></NewPatient>
             <NewDoctor v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')"></NewDoctor>
-            <Management v-show="route === ('/dashboard/management' || '/dashboard/management/')"></Management>
+            <Doctors v-if="user.admin" v-show="route === ('/dashboard/doctors' || '/dashboard/doctors/')"></Doctors>
+            <Patients v-else v-show="route === ('/dashboard/patients' || '/dashboard/patients/')"></Patients>
             <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')"></Settings>
         </main>
     </div>
@@ -18,7 +19,8 @@
     import Statistics from '@/components/Dashboard/Statistics.vue'
     import NewPatient from '@/components/Dashboard/NewPatient.vue'
 	import NewDoctor from '@/components/Dashboard/NewDoctor.vue'
-	import Management from '@/components/Dashboard/Management.vue'
+	import Patients from '@/components/Dashboard/Patients.vue'
+    import Doctors from '@/components/Dashboard/Doctors.vue'
     import Settings from '@/components/Dashboard/Settings.vue'
 
     export default {
@@ -28,7 +30,8 @@
             Statistics,
 			NewPatient,
 			NewDoctor,
-			Management,
+            Patients,
+            Doctors,
 			Settings
         },
         created() {

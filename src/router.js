@@ -79,15 +79,15 @@ export default new Router({
             component: Dashboard
         },
 		{
-			path: "/dashboard/management",
+			path: "/dashboard/patients",
 			name: "management",
 			component: Dashboard
 		},
-		{
-			path: "/dashboard/management/:id",
-			name: "management",
-			component: Dashboard
-		},
+        {
+            path: "/dashboard/doctors",
+            name: "management",
+            component: Dashboard
+        },
 		{
 			path: "/dashboard/settings",
 			name: "Settings",

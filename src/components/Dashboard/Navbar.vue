@@ -35,7 +35,7 @@
                     </v-list-tile>
                     <v-divider></v-divider>
                     <v-list-tile
-                            v-for="item in dashboardNavigation"
+                            v-for="item in dashboardNavigation()"
                             :key="item.title"
                             v-bind:class="item.route === route ? selectedTab: 'notSelectedTab'"
                             class="pa-2"
@@ -88,13 +88,6 @@
         data () {
         	return {
 				statusNavBar: false,
-				dashboardNavigation: [
-					{title: 'Статистика', icon: 'show_chart',route: '/dashboard'},
-					{title: 'Календар', icon: 'date_range', route: '/dashboard/calendar'},
-					{title: 'Пацієнти', icon: 'people', route: '/dashboard/management'},
-					{title: 'Додати нового', icon: 'add', route: '/dashboard/newPatient'},
-					{title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},
-				],
                 userNavigation: [
                     {title: 'Налаштування', icon: 'settings', route: '/dashboard/settings'},
                     {title: 'Вихід', icon: 'exit_to_app', route: '/'},
@@ -115,6 +108,20 @@
 
 				this.$router.push('/');
             },
+            dashboardNavigation: function () {
+                const navigation = [
+                    {title: 'Статистика', icon: 'show_chart',route: '/dashboard'},
+                    {title: 'Календар', icon: 'date_range', route: '/dashboard/calendar'},
+                    {title: 'Додати нового', icon: 'add', route: '/dashboard/newPatient'},
+                    {title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},
+                ];
+
+                this.user.admin ?
+                    navigation.push({title: 'Лікарі', icon: 'people', route: '/dashboard/doctors'}) :
+                    navigation.push({title: 'Пацієнти', icon: 'people', route: '/dashboard/patients'});
+
+                return navigation;
+            }
         },
     }
 </script>

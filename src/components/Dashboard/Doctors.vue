@@ -263,10 +263,10 @@
 
 	export default {
 		name: "Doctors",
-		 beforeCreate() {
+        beforeCreate() {
 			this.$store.dispatch({type: "doctors"}).then((doctors) => {
 				if (_.isEmpty(doctors)) {
-					this.$notificator('warning', 'Ви немаєте жодного пацієнта!')
+					this.$notificator('warning', 'Немає жодного лікаря!')
                 }
             })
         },

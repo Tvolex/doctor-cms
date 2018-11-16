@@ -4,8 +4,8 @@
         <main>
             <Statistics v-show="route === ('/dashboard' || '/dashboard/')"></Statistics>
             <Calendar v-show="route === ('/dashboard/calendar' || '/dashboard/calendar')"></Calendar>
-            <NewPatient v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')"></NewPatient>
-            <NewDoctor v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')" ></NewDoctor>
+            <NewPatient v-if="!user.admin" v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')" :user="user"></NewPatient>
+            <NewDoctor v-else v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')" :user="user"></NewDoctor>
             <Doctors v-if="user.admin" v-show="route === ('/dashboard/doctors' || '/dashboard/doctors/')" :user="user"></Doctors>
             <Patients v-else v-show="route === ('/dashboard/patients' || '/dashboard/patients/')" :user="user"></Patients>
             <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')"></Settings>

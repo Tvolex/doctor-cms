@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-layout row wrap main-items>
             <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
-                <div class="pa-2">
+                <div class="pa-2" v-if="user.admin">
                     <router-link to="/dashboard/newPatient">Додати нового пацієнта</router-link> |
                     <router-link to="/dashboard/newDoctor">Додати нового лікаря</router-link>
                 </div>
@@ -88,6 +88,9 @@
     import axios from 'axios';
 	export default {
 		name: "newDoctor",
+		props: {
+			user: Object
+		},
 		data() {
 			return {
                 loading: false,

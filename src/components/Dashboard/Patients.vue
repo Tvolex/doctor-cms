@@ -280,11 +280,7 @@
 		},
         methods: {
 			getEventsByPatient(_id) {
-                axios.get(`/api/user/${_id}`, {
-                	params: {
-						doctor: this.user ? this.user._id : null,
-                    }
-                })
+                axios.get(`/api/user/${_id}`)
                     .then((res) => {
                         this.loading = false;
 						this.selectedPatient = res.data;

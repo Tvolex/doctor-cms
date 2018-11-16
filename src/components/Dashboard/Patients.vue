@@ -256,6 +256,9 @@
 
 	export default {
 		name: "Patients",
+		props: {
+			user: Object
+		},
         beforeCreate() {
 			this.$store.dispatch({type: "patients"}).then((patients) => {
 				if (_.isEmpty(patients)) {
@@ -277,7 +280,11 @@
 		},
         methods: {
 			getEventsByPatient(_id) {
-                axios.get(`/api/user/${_id}`)
+                axios.get(`/api/user/${_id}`, {
+                	params: {
+						doctor: this.user ? this.user._id : null,
+                    }
+                })
                     .then((res) => {
                         this.loading = false;
 						this.selectedPatient = res.data;

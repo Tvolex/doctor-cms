@@ -1,10 +1,10 @@
 <template>
-    <v-container fluid>
+    <v-container fluid v-if="user.admin">
         <v-layout row wrap main-items>
-            <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
-                <div class="pa-2" v-if="user.admin">
-                    <router-link to="/dashboard/newPatient">Додати нового пацієнта</router-link> |
-                    <router-link to="/dashboard/newDoctor">Додати нового лікаря</router-link>
+            <v-flex xs10 offset-xs1 md6 offset-md3>
+                <div class="pa-2" >
+                    <router-link to="/dashboard/newPatient">Додати нового <b>пацієнта</b></router-link> |
+                    <router-link to="/dashboard/newDoctor">Додати нового <b>лікаря</b></router-link>
                 </div>
                 <h2 class="pa-2">
                     Введіть дані про нового лікаря
@@ -84,32 +84,32 @@
 </template>
 
 <script>
-    import moment from 'moment'
-    import axios from 'axios';
+	import moment from 'moment'
+	import axios from 'axios';
 	export default {
 		name: "newDoctor",
 		data() {
 			return {
-                loading: false,
-                menu: null,
-                isFormValid: false,
+				loading: false,
+				menu: null,
+				isFormValid: false,
 
-                email: null,
-                name: null,
-                surname: null,
-                patronymic: null,
+				email: null,
+				name: null,
+				surname: null,
+				patronymic: null,
 				specialization: null,
 
 				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
 
-                specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
-                emailRules: [
-                    v => !!v || 'E-mail обов`язковий!',
-                    v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
-                ],
-                nameRules: [v => !!v || 'Імя обов`язкове!'],
-                surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
-                patronymicRules: [v => !!v || 'ПО батькові обов`язкове!'],
+				specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
+				emailRules: [
+					v => !!v || 'E-mail обов`язковий!',
+					v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
+				],
+				nameRules: [v => !!v || 'Імя обов`язкове!'],
+				surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
+				patronymicRules: [v => !!v || 'ПО батькові обов`язкове!'],
 			}
 		},
 		computed: {
@@ -117,30 +117,30 @@
 				return this.$store.getters.user;
 			},
 		},
-        methods: {
+		methods: {
 			Create: function () {
-                axios.post('/api/user/', {
-                    newDoctor: {
-                        email: this.email,
-                        name: this.name,
-                        surname: this.surname,
-                        patronymic: this.patronymic,
-                        specialization: this.specialization,
-                    },
-                }).then((res) => {
-                    this.loading = false;
-                    this.$notificator('info', 'Новий запис лікаря створено успішно!')
-                }).catch((err) => {
-                    this.loading = false;
-                    console.log(err);
-                    let message = err.message || 'Щось сталось не так :(';
-                    if (err.response && err.response.data && err.response.data.message) {
-                        message = err.response.data.message;
-                    }
-                    return this.$notificator('error', message);
-                });
+				axios.post('/api/user/', {
+					newDoctor: {
+						email: this.email,
+						name: this.name,
+						surname: this.surname,
+						patronymic: this.patronymic,
+						specialization: this.specialization,
+					},
+				}).then((res) => {
+					this.loading = false;
+					this.$notificator('info', 'Новий запис лікаря створено успішно!')
+				}).catch((err) => {
+					this.loading = false;
+					console.log(err);
+					let message = err.message || 'Щось сталось не так :(';
+					if (err.response && err.response.data && err.response.data.message) {
+						message = err.response.data.message;
+					}
+					return this.$notificator('error', message);
+				});
 			}
-        },
+		},
 	}
 </script>
 

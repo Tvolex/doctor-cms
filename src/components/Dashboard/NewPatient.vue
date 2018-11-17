@@ -1,10 +1,10 @@
 <template>
     <v-container fluid>
         <v-layout row wrap main-items>
-            <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
+            <v-flex xs10 offset-xs1 md6 offset-md3 >
                 <div class="pa-2" v-if="user.admin">
-                    <router-link to="/dashboard/newPatient">Додати нового пацієнта</router-link> |
-                    <router-link to="/dashboard/newDoctor">Додати нового лікаря</router-link>
+                    <router-link to="/dashboard/newPatient">Додати нового <b>пацієнта</b></router-link> |
+                    <router-link to="/dashboard/newDoctor">Додати нового <b>лікаря</b></router-link>
                 </div>
                 <h2 class="pa-2">
                     Введіть дані про нового пацієнта
@@ -121,7 +121,6 @@
                             <v-text-field
                                     v-model="apartment"
                                     label="Номер квартири"
-                                    type="number"
                                     name="apartment"
                                     outline
                                     required
@@ -143,8 +142,8 @@
                                     v-model="passportNumber"
                                     :rules="passportNumberRules"
                                     label="Номер паспорта"
-                                    type="number"
                                     name="passportNumber"
+                                    min="5"
                                     outline
                                     required
                             ></v-text-field>
@@ -198,18 +197,18 @@
                 ],
                 nameRules: [v => !!v || 'Імя обов`язкове!'],
                 surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
-                patronymicRules: [v => !!v || 'ПО батькові обов`язкове!'],
+                patronymicRules: [v => !!v || 'По батькові обов`язкове!'],
                 birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
                 cityRules: [v => !!v || 'Місто обов`язкове!'],
                 streetRules: [v => !!v || 'Вулиця обов`язкова!'],
                 houseRules: [
                 	v => !!v || 'Будинок обов`язкови!',
-					v => _.isInteger(v) || 'Номер будинка позначається числом!'
+					v => _.isInteger(parseInt(v)) || 'Номер будинка позначається числом!'
                 ],
                 passportSeriesRules: [v => !!v || 'Серія паспорта обов`язкова!'],
                 passportNumberRules: [
                 	v => !!v || 'Номер паспорта обов`язковий!',
-                    v => _.isInteger(v) || 'Номер паспорта складається з цифр!'
+                    v =>  _.isInteger(parseInt(v)) || 'Номер паспорта складається з цифр!'
                 ],
 			}
 		},

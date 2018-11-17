@@ -273,7 +273,7 @@
                 selectedPatient: null,
                 eventDetailsDialog: false,
 				eventActions: [
-					{ title: 'Редагувати', color: "green darken-1", method: (_id, option) => console.log(`Edit event: ${_id}, options: ${option}`)},
+					{ title: 'Завершити', color: "green darken-1", method: (_id, option) => this.changeEventStatus(_id, EVENT_STATUS.PASSED)},
 					{ title: 'Відмінити', color: "red darken-1", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
 				]
 			}

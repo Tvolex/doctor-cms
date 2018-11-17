@@ -42,7 +42,7 @@
                                 :key="selectedPatient._id"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="selectedDoctor = null">Закрити</v-btn>
+                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                             <v-divider></v-divider>
                             <v-card-text>
                                 <v-avatar
@@ -167,7 +167,7 @@
                                 class="ma-3"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="selectedDoctor = null">Закрити</v-btn>
+                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                             <v-card-text>
                                 <v-avatar
                                         size="88"

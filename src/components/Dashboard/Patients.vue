@@ -1,40 +1,70 @@
 <template>
     <div>
-        <div v-if="detectIsMobile()">
+        <div v-if="detectIsMobile() && patients">
             <v-layout row>
-                <v-flex xs12  v-if="!selectedPatient">
+                <v-flex xs12 v-if="!selectedPatient">
                     <v-scroll-x-transition mode="out-in">
-                        <v-card class="ma-3">
-                            <v-list subheader>
-                                <v-subheader>Пацієнти</v-subheader>
-                                <v-list-tile
-                                        v-for="patient in patients"
-                                        :key="patient._id"
-                                        @click="getEventsByPatient(patient._id)"
-                                >
-                                    <v-list-tile-avatar>
-                                        <img v-if="patient.avatar" :src="patient.avatar">
-                                        <img v-else src="@/assets/person.png" alt="">
-                                    </v-list-tile-avatar>
+                        <div>
+                            <v-card class="ma-3" v-if="patients.withEvents">
+                                <v-list subheader>
+                                    <v-subheader>Записані пацієнти</v-subheader>
+                                    <v-list-tile
+                                            v-for="patient in patients.withEvents"
+                                            :key="patient._id"
+                                            @click="getEventsByPatient(patient._id)"
+                                    >
+                                        <v-list-tile-avatar>
+                                            <img v-if="patient.avatar" :src="patient.avatar">
+                                            <img v-else src="@/assets/person.png" alt="">
+                                        </v-list-tile-avatar>
 
-                                    <v-layout align-center justify-center row wrap>
-                                        <v-flex xs12 sm6 lm5 md6>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                        <v-flex xs12 sm6 lm5 md6>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="patient.email"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-list-tile>
-                            </v-list>
-                            <v-divider></v-divider>
-                        </v-card>
+                                        <v-layout align-center justify-center row wrap>
+                                            <v-flex xs12 sm6 lm5 md6>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 lm5 md6>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="patient.email"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-list-tile>
+                                </v-list>
+                                <v-divider></v-divider>
+                            </v-card>
+                            <v-card class="ma-3" v-if="patients.withoutEvents">
+                                <v-list subheader>
+                                    <v-subheader>Не записані пацієнти</v-subheader>
+                                    <v-list-tile
+                                            v-for="patient in patients.withoutEvents"
+                                            :key="patient._id"
+                                            @click="getEventsByPatient(patient._id)"
+                                    >
+                                        <v-list-tile-avatar>
+                                            <img v-if="patient.avatar" :src="patient.avatar">
+                                            <img v-else src="@/assets/person.png" alt="">
+                                        </v-list-tile-avatar>
+
+                                        <v-layout align-center justify-center row wrap>
+                                            <v-flex xs12 sm6 lm5 md6>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 lm5 md6>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="patient.email"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-list-tile>
+                                </v-list>
+                                <v-divider></v-divider>
+                            </v-card>
+                        </div>
                     </v-scroll-x-transition>
-
                 </v-flex>
                 <v-flex xs12 v-if="selectedPatient">
                     <v-scroll-x-reverse-transition mode="out-in">
@@ -90,6 +120,16 @@
                                         </v-flex>
                                     </v-layout>
                                 </v-list-tile>
+                                <v-divider></v-divider>
+                                <v-list-tile @click="">
+                                    <v-list-tile-action>
+                                        <v-icon color="green">add</v-icon>
+                                    </v-list-tile-action>
+
+                                    <v-list-tile-content>
+                                        <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
+                                    </v-list-tile-content>
+                                </v-list-tile>
                             </v-list>
                         </v-card>
                     </v-scroll-x-reverse-transition>
@@ -126,39 +166,71 @@
                 </v-card>
             </v-dialog>
         </div>
-        <div v-if="!detectIsMobile()" >
+        <div v-if="!detectIsMobile() && patients" >
             <v-layout row>
                 <v-flex xs12 md6 lg5>
-                    <v-card class="ma-3">
-                        <v-list subheader>
-                            <v-subheader>Пацієнти</v-subheader>
-                            <v-list-tile
-                                    v-for="user in patients"
-                                    :key="user.fullName"
-                                    avatar
-                                    @click="getEventsByPatient(user._id)"
-                            >
-                                <v-list-tile-avatar>
-                                    <img v-if="user.avatar" :src="user.avatar">
-                                    <img v-else src="@/assets/person.png" alt="">
-                                </v-list-tile-avatar>
+                    <div>
+                        <v-card class="ma-3" v-if="patients.withEvents">
+                            <v-list subheader>
+                                <v-subheader>Записані пацієнти</v-subheader>
+                                <v-list-tile
+                                        v-for="patient in patients.withEvents"
+                                        :key="patient._id"
+                                        avatar
+                                        @click="getEventsByPatient(patient._id)"
+                                >
+                                    <v-list-tile-avatar>
+                                        <img v-if="patient.avatar" :src="patient.avatar">
+                                        <img v-else src="@/assets/person.png" alt="">
+                                    </v-list-tile-avatar>
 
-                                <v-layout align-center justify-center row wrap>
-                                    <v-flex xs12 sm6 lm5 md6>
-                                        <v-list-tile-content>
-                                            <v-list-tile-title v-html="user.fullName"></v-list-tile-title>
-                                        </v-list-tile-content>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 lm5 md6>
-                                        <v-list-tile-content>
-                                            <v-list-tile-title v-html="user.email"></v-list-tile-title>
-                                        </v-list-tile-content>
-                                    </v-flex>
-                                </v-layout>
-                            </v-list-tile>
-                        </v-list>
-                        <v-divider></v-divider>
-                    </v-card>
+                                    <v-layout align-center justify-center row wrap>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="patient.email"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-list-tile>
+                            </v-list>
+                            <v-divider></v-divider>
+                        </v-card>
+                        <v-card class="ma-3" v-if="patients.withoutEvents">
+                            <v-list subheader>
+                                <v-subheader>Не записані пацієнти</v-subheader>
+                                <v-list-tile
+                                        v-for="patient in patients.withoutEvents"
+                                        :key="patient._id"
+                                        avatar
+                                        @click="getEventsByPatient(patient._id)"
+                                >
+                                    <v-list-tile-avatar>
+                                        <img v-if="patient.avatar" :src="patient.avatar">
+                                        <img v-else src="@/assets/person.png" alt="">
+                                    </v-list-tile-avatar>
+
+                                    <v-layout align-center justify-center row wrap>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs12 sm6 lm5 md6>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="patient.email"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-list-tile>
+                            </v-list>
+                            <v-divider></v-divider>
+                        </v-card>
+                    </div>
                 </v-flex>
                 <v-flex xs12 md6 lg7 v-if="selectedPatient">
                     <v-scroll-y-reverse-transition mode="out-in">
@@ -201,6 +273,7 @@
                                         v-for="event in selectedPatient.events"
                                         :key="event._id"
                                         avatar
+                                        @click=""
                                 >
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs6 sm4 offset-sm1 md3 offset-md1>
@@ -237,6 +310,16 @@
                                             </v-list-tile-content>
                                         </v-flex>
                                     </v-layout>
+                                </v-list-tile>
+                                <v-divider></v-divider>
+                                <v-list-tile @click="">
+                                    <v-list-tile-action>
+                                        <v-icon color="green">add</v-icon>
+                                    </v-list-tile-action>
+
+                                    <v-list-tile-content>
+                                        <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
+                                    </v-list-tile-content>
                                 </v-list-tile>
                             </v-list>
                         </v-card>

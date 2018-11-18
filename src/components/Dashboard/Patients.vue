@@ -1,11 +1,21 @@
 <template>
     <div>
         <div v-if="detectIsMobile() && patients">
+            <v-layout row align-center justify-center class="text-xs-center mx-3">
+                <v-flex xs12 sm6 md4>
+                    <v-text-field
+                            v-model="search"
+                            label="Пошук"
+                            name="search"
+                            @change="Search"
+                    ></v-text-field>
+                </v-flex>
+            </v-layout>
             <v-layout row>
                 <v-flex xs12 v-if="!selectedPatient">
                     <v-scroll-x-transition mode="out-in">
                         <div>
-                            <v-card class="ma-3" v-if="patients.withEvents">
+                            <v-card class="mx-3" v-if="patients.withEvents.length">
                                 <v-list subheader>
                                     <v-subheader>Записані пацієнти</v-subheader>
                                     <v-list-tile
@@ -34,7 +44,7 @@
                                 </v-list>
                                 <v-divider></v-divider>
                             </v-card>
-                            <v-card class="ma-3" v-if="patients.withoutEvents">
+                            <v-card class="ma-3" v-if="patients.withoutEvents.length">
                                 <v-list subheader>
                                     <v-subheader>Не записані пацієнти</v-subheader>
                                     <v-list-tile
@@ -68,70 +78,76 @@
                 </v-flex>
                 <v-flex xs12 v-if="selectedPatient">
                     <v-scroll-x-reverse-transition mode="out-in">
-                        <v-card class="ma-3"
-                                :key="selectedPatient._id"
-                                color="#fffacd"
-                        >
-                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
-                            <v-divider></v-divider>
-                            <v-card-text>
-                                <v-avatar
-                                        size="88"
-                                >
-                                    <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
-                                    <img v-else src="@/assets/person.png">
-                                </v-avatar>
-                                <h3 class="headline mb-2">
-                                    {{ selectedPatient.name }}
-                                </h3>
-                                <div class="blue--text mb-2">{{ selectedPatient.email }}</div>
-                                <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
-                            </v-card-text>
-                            <v-divider></v-divider>
-                            <v-layout
-                                    tag="v-card-text"
-                                    text-md-center
-                                    wrap
+                        <div>
+                            <v-card class="mx-3 mt-3"
+                                    :key="selectedPatient._id"
+                                    color="#fffacd"
                             >
-                                <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{
-                                selectedPatient.birthdate }}</v-flex>
-                                <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{
-                                selectedPatient.passportSeries }}</v-flex>
-                                <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
-                                selectedPatient.passportNumber }}</v-flex>
-                            </v-layout>
-                            <v-list subheader >
-                                <v-subheader>Записи</v-subheader>
-                                <v-list-tile
-                                        v-for="event in selectedPatient.events"
-                                        :key="event._id"
-                                        @click="selectedEvent = event"
-                                >
-                                    <v-layout align-center justify-space-around row wrap>
-                                        <v-flex xs6 >
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                        <v-flex xs6>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-list-tile>
+                                <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                                 <v-divider></v-divider>
-                                <v-list-tile @click="">
-                                    <v-list-tile-action>
-                                        <v-icon color="green">add</v-icon>
-                                    </v-list-tile-action>
+                                <v-card-text>
+                                    <v-avatar
+                                            size="88"
+                                    >
+                                        <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
+                                        <img v-else src="@/assets/person.png">
+                                    </v-avatar>
+                                    <h3 class="headline mb-2">
+                                        {{ selectedPatient.name }}
+                                    </h3>
+                                    <div class="blue--text mb-2">{{ selectedPatient.email }}</div>
+                                    <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
+                                </v-card-text>
+                                <v-divider></v-divider>
+                                <v-layout
+                                        tag="v-card-text"
+                                        text-md-center
+                                        wrap
+                                >
+                                    <v-flex tag="strong" xs6 >Дата народження:</v-flex><v-flex xs6>{{
+                                    selectedPatient.birthdate }}</v-flex>
+                                    <v-flex tag="strong" xs6 >Серія паспорта:</v-flex><v-flex xs6>{{
+                                    selectedPatient.passportSeries }}</v-flex>
+                                    <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
+                                    selectedPatient.passportNumber }}</v-flex>
+                                </v-layout>
+                                <v-divider></v-divider>
+                                <v-list subheader >
+                                    <v-subheader>Записи</v-subheader>
+                                    <v-list-tile
+                                            v-for="event in selectedPatient.events"
+                                            :key="event._id"
+                                            @click="selectedEvent = event"
+                                    >
+                                        <v-layout align-center justify-space-around row wrap>
+                                            <v-flex xs6 >
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                            <v-flex xs6>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-list-tile>
+                                </v-list>
+                            </v-card>
+                            <v-card class="mx-3 mt-3">
+                                <v-list>
+                                    <v-list-tile @click="">
+                                        <v-list-tile-action>
+                                            <v-icon color="green">add</v-icon>
+                                        </v-list-tile-action>
 
-                                    <v-list-tile-content>
-                                        <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </v-list>
-                        </v-card>
+                                        <v-list-tile-content>
+                                            <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
+                                        </v-list-tile-content>
+                                    </v-list-tile>
+                                </v-list>
+                            </v-card>
+                        </div>
                     </v-scroll-x-reverse-transition>
                 </v-flex>
             </v-layout>
@@ -143,6 +159,9 @@
                 <v-card>
                     <v-card-title class="headline">Деталі</v-card-title>
 
+                    <v-card-text>
+                        До: {{selectedEvent.specialization}}
+                    </v-card-text>
                     <v-card-text>
                         Пацієнт: {{selectedPatient.fullName}}
                     </v-card-text>
@@ -167,10 +186,21 @@
             </v-dialog>
         </div>
         <div v-if="!detectIsMobile() && patients" >
+            <v-layout row align-center justify-center class="text-xs-center mx-3">
+                <v-flex xs12 sm6 md4>
+                    <v-text-field
+                            v-model="search"
+                            label="Пошук"
+                            name="search"
+                            @change="Search"
+                    ></v-text-field>
+                </v-flex>
+            </v-layout>
             <v-layout row>
+
                 <v-flex xs12 md6 lg5>
                     <div>
-                        <v-card class="ma-3" v-if="patients.withEvents">
+                        <v-card class="mx-3" v-if="patients.withEvents.length">
                             <v-list subheader>
                                 <v-subheader>Записані пацієнти</v-subheader>
                                 <v-list-tile
@@ -200,7 +230,7 @@
                             </v-list>
                             <v-divider></v-divider>
                         </v-card>
-                        <v-card class="ma-3" v-if="patients.withoutEvents">
+                        <v-card class="mx-3 mt-3" v-if="patients.withoutEvents.length">
                             <v-list subheader>
                                 <v-subheader>Не записані пацієнти</v-subheader>
                                 <v-list-tile
@@ -236,7 +266,7 @@
                     <v-scroll-y-reverse-transition mode="out-in">
                         <v-card
                                 :key="selectedPatient._id"
-                                class="ma-3"
+                                class="mx-3"
                                 color="#fffacd"
                         >
                             <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
@@ -276,12 +306,17 @@
                                         @click=""
                                 >
                                     <v-layout align-center justify-center row wrap>
-                                        <v-flex xs6 sm4 offset-sm1 md3 offset-md1>
+                                        <v-flex xs6 sm3 md3 lg3 >
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.specialization"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs6 sm4 md4 lg3 >
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs4 sm4 md3 offset-md1>
+                                        <v-flex xs4 sm3 md3 lg3 >
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
                                             </v-list-tile-content>
@@ -351,7 +386,8 @@
         },
 		data () {
 			return {
-                loading: false,
+				search: null,
+				loading: false,
                 selectedEvent: null,
                 selectedPatient: null,
                 eventDetailsDialog: false,
@@ -403,7 +439,14 @@
                         this.selectedEvent = null;
                     });
                 })
-            }
+            },
+			Search() {
+				this.$store.dispatch({type: "patients", search: this.search } ).then((patients) => {
+					if (_.isEmpty(patients)) {
+						this.$notificator('warning', 'Ви немаєте жодного пацієнта!')
+					}
+				})
+			}
         },
         computed: {
 			auth() {

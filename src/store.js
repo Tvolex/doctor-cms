@@ -74,14 +74,16 @@ export default new Vuex.Store({
             return res.data;
         },
 
-		async patients ({commit}) {
+		async patients ({commit}, {search}) {
+			console.log(search);
 			let res;
 			try {
 				res = await axios.get(`/api/user/patients`, {
                     params: {
                         filter: {
                             type: ['patient'],
-                        }
+                        },
+						search,
                     }
 				});
 			} catch (err) {

@@ -274,5 +274,8 @@
 </script>
 
 <style scoped>
-
+    .register {
+        background: transparent url("../assets/background.jpeg") !important;
+        height: 100%;
+    }
 </style>

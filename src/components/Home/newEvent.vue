@@ -18,6 +18,8 @@
                             <v-flex xs12>
                                 <v-select
                                         :items="specializations"
+                                        item-text="name"
+                                        item-value="_id"
                                         v-model="specialization"
                                         label="Спеціалізація"
                                         :rules="specializationRules"
@@ -121,14 +123,16 @@
 
 	export default {
 		name: "newEvent",
-        components: {},
+        beforeMount() {
+            this.getSpecialization();
+        },
 		data() {
 			return {
                 isDatePickerActive: false,
                 loading: false,
 				isFormValid: false,
-				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
-				doctors: null,
+				specializations: [],
+				doctors: [],
 				specialization: null,
 				doctor: null,
 				date: null,
@@ -147,6 +151,14 @@
             },
         },
 		methods: {
+		    getSpecialization: function () {
+                axios.get(`/api/specialization`).then((res) => {
+                    this.specializations = res.data;
+                }).catch((err) => {
+                    console.log(err);
+                    this.specializations = [];
+                });
+            },
 			availableDates: function () {
 				const range = moment
 					.range(

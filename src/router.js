@@ -74,8 +74,8 @@ export default new Router({
 			component: Dashboard
 		},
         {
-            path: "/dashboard/findPatient",
-            name: "findPatient",
+            path: "/dashboard/specialization",
+            name: "addSpecialization",
             component: Dashboard
         },
 		{

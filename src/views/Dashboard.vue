@@ -7,6 +7,7 @@
             <NewPatient v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')" ></NewPatient>
             <NewDoctor v-if="user.admin"  v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')" ></NewDoctor>
             <Doctors v-if="user.admin" v-show="route === ('/dashboard/doctors' || '/dashboard/doctors/')" :user="user"></Doctors>
+            <NewSpecialization v-if="user.admin" v-show="route === ('/dashboard/specialization' || '/dashboard/specialization/')"></NewSpecialization>
             <Patients v-else v-show="route === ('/dashboard/patients' || '/dashboard/patients/')" :user="user"></Patients>
             <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')"></Settings>
         </main>
@@ -19,6 +20,7 @@
     import Statistics from '@/components/Dashboard/Statistics.vue'
     import NewPatient from '@/components/Dashboard/NewPatient.vue'
 	import NewDoctor from '@/components/Dashboard/NewDoctor.vue'
+    import NewSpecialization from '@/components/Dashboard/NewSpecialization.vue'
 	import Patients from '@/components/Dashboard/Patients.vue'
     import Doctors from '@/components/Dashboard/Doctors.vue'
     import Settings from '@/components/Dashboard/Settings.vue'
@@ -30,6 +32,7 @@
             Statistics,
 			NewPatient,
 			NewDoctor,
+            NewSpecialization,
             Patients,
             Doctors,
 			Settings

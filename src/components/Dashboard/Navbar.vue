@@ -113,11 +113,13 @@
                     {title: 'Статистика', icon: 'show_chart',route: '/dashboard'},
                     {title: 'Календар', icon: 'date_range', route: '/dashboard/calendar'},
                     {title: 'Додати нового', icon: 'add', route: '/dashboard/newPatient'},
-                    {title: 'Знайти пацієнта', icon: 'insert_drive_file', route: '/dashboard/findPatient'},
                 ];
 
                 this.user.admin ?
-                    navigation.push({title: 'Лікарі', icon: 'people', route: '/dashboard/doctors'}) :
+                    navigation.push(...[
+                        {title: 'Лікарі', icon: 'people', route: '/dashboard/doctors'},
+                        {title: 'Додати спеціалізації', icon: 'insert_drive_file', route: '/dashboard/specialization'},
+                    ]) :
                     navigation.push({title: 'Пацієнти', icon: 'people', route: '/dashboard/patients'});
 
                 return navigation;

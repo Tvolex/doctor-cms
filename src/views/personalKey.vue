@@ -100,5 +100,9 @@
 </script>
 
 <style scoped>
-
+    .personalKey {
+        background: transparent url("../assets/background.jpeg") !important;
+        background-size: cover;
+        height: 100%;
+    }
 </style>

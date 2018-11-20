@@ -55,6 +55,8 @@
                             <v-select
                                     :items="specializations"
                                     v-model="specialization"
+                                    item-text="name"
+                                    item-value="_id"
                                     label="Спеціалізація"
                                     multiple
                                     persistent-hint
@@ -88,6 +90,9 @@
 	import axios from 'axios';
 	export default {
 		name: "newDoctor",
+        beforeMount() {
+            this.getSpecialization();
+        },
 		data() {
 			return {
 				loading: false,
@@ -118,6 +123,14 @@
 			},
 		},
 		methods: {
+            getSpecialization: function () {
+                axios.get(`/api/specialization`).then((res) => {
+                    this.specializations = res.data;
+                }).catch((err) => {
+                    console.log(err);
+                    this.specializations = [];
+                });
+            },
 			Create: function () {
 				axios.post('/api/user/', {
 					newDoctor: {

@@ -300,6 +300,31 @@
                     this.$notificator('error', message);
                 });
             },
+			changeEventStatus(_id, status) {
+				axios.put(`/api/event/status/${_id}`, {
+					status
+				})
+					.then((res) => {
+						this.loading = false;
+						this.$notificator(res.data.type, res.data.message);
+					})
+					.catch((err) => {
+						this.loading = false;
+						console.log(err);
+						let message = err.message || 'Щось сталось не так :(';
+						if (err.response && err.response.data && err.response.data.message) {
+							message = err.response.data.message;
+						}
+						this.$notificator('error', message);
+					}).finally(() => {
+					this.$store.dispatch({type: "doctors"}).then(doctors => {
+						const doctor = doctors.find(doctor => _.isEqual(this.selectedDoctor._id, doctor._id));
+						this.selectedDoctor = doctor ? this.getEventsByPatient(doctor._id): null;
+						this.eventDetailsDialog = false;
+						this.selectedEvent = null;
+					});
+				})
+			},
         },
         computed: {
 			auth() {

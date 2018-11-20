@@ -428,7 +428,7 @@
                         this.$notificator('error', message);
                 }).finally(() => {
                     this.$store.dispatch({type: "patients"}).then(patients => {
-                        const patient = patients.find(patient => _.isEqual(this.selectedPatient._id, patient._id));
+                        const patient = patients.withEvents.find(patient => _.isEqual(this.selectedPatient._id, patient._id));
                         this.selectedPatient = patient ? this.getEventsByPatient(patient._id): null;
                         this.eventDetailsDialog = false;
                         this.selectedEvent = null;

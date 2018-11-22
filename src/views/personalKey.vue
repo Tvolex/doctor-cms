@@ -58,10 +58,20 @@
 				this.$notificator('error', 'Будь-ласка, повторіть вибір даних, так як вони були втрачені');
             }
         },
+        mounted() {
+            const { selectedPatient } = this.$store.getters;
+            this.personalKey = selectedPatient.personalKey;
+
+            if (selectedPatient) {
+                this.label = `Персональний ключ для ${selectedPatient.fullName}`;
+            }
+
+        },
 		data() {
 			return {
-				loading: false,
-				menu: null,
+                menu: null,
+                label: 'Персональний ключ',
+                loading: false,
 				isFormValid: false,
 				personalKey: null,
 				personalKeyRules: [

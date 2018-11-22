@@ -348,7 +348,7 @@
                                     </v-list-tile-action>
 
                                     <v-list-tile-content>
-                                        <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
+                                        <v-btn @click="AddNewEvent" tag="v-list-tile-title">Додати новий запис</v-btn>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </v-list>
@@ -393,6 +393,12 @@
 			}
 		},
         methods: {
+            AddNewEvent() {
+                if (this.selectedPatient) {
+                    this.$store.commit('selectedPatient', {type: 'selectedPatient', value: this.selectedPatient});
+                    this.$router.push('/');
+                }
+            },
 			getEventsByPatient(_id) {
                 axios.get(`/api/user/${_id}`)
                     .then((res) => {

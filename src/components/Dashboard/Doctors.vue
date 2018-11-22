@@ -78,12 +78,17 @@
                                         @click="selectedEvent = event"
                                 >
                                     <v-layout align-center justify-space-around row wrap>
-                                        <v-flex xs6 >
+                                        <v-flex xs4 md4 offset-md1>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs6>
+                                        <v-flex xs3 class="hidden-xs-only">
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.patientFullName"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs3>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
                                             </v-list-tile-content>
@@ -104,7 +109,7 @@
                     <v-card-title class="headline">Деталі</v-card-title>
 
                     <v-card-text>
-                        Пацієнт: {{selectedDoctor.fullName}}
+                        Пацієнт: {{selectedEvent.patientFullName}}
                     </v-card-text>
                     <v-card-text>
                         Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
@@ -208,19 +213,25 @@
                                         v-for="event in selectedDoctor.events"
                                         :key="event._id"
                                         avatar
+                                        @click=""
                                 >
                                     <v-layout align-center justify-center row wrap>
-                                        <v-flex xs6 sm4 offset-sm1 md3 offset-md1>
+                                        <v-flex xs4 md4 lg3 class="test-md-center">
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs4 sm4 md3 offset-md1>
+                                        <v-flex xs3 lg3 class="test-md-center">
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="event.patientFullName"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-flex>
+                                        <v-flex xs4 md4 lg3 class="test-md-center">
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs2 sm2 md2>
+                                        <v-flex xs1 lg3 class="test-md-center">
                                             <v-list-tile-content>
                                                 <v-menu>
                                                     <v-btn
@@ -277,8 +288,8 @@
                 selectedDoctor: null,
                 eventDetailsDialog: false,
 				eventActions: [
-					{ title: 'Редагувати', color: "green darken-1", method: (_id, option) => console.log(`Edit event: ${_id}, options: ${option}`)},
-					{ title: 'Відмінити', color: "red darken-1", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
+					{ title: 'Завершити', color: "green", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.PASSED) },
+					{ title: 'Відмінити', color: "red", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
 				]
 			}
 		},

@@ -40,7 +40,7 @@
                     <line-chart :data="statistics.lineChartData" :dataset="{borderWidth: 5}"></line-chart>
                 </v-flex>
                 <v-flex xs12 md6>
-                    <pie-chart :donut="true" :colors="['#FEC5E5', '#D0F0C0']" :data="statistics.pieChartData"></pie-chart>
+                    <pie-chart :donut="true" :colors="colors" :data="statistics.pieChartData"></pie-chart>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -62,10 +62,11 @@
         },
 		data () {
 			return {
-				buttonLoader: null,
+			    colors: ['#FEC5E5', '#D0F0C0', '#D1C4E9', '#C5CAE9', '#F0F4C3'],
+                buttonLoader: null,
 				loading: false,
-				dateFrom: moment().format("YYYY-MM-DD"),
-				dateTo: moment().format("YYYY-MM-DD"),
+				dateFrom: moment().startOf('month').format("YYYY-MM-DD"),
+				dateTo: moment().endOf('month').format("YYYY-MM-DD"),
                 statistics: {
 					pieChartData: {'Обстежено': 0, 'Записано на обстеження': 0},
 					lineChartData: [
@@ -78,7 +79,15 @@
             getStatistics: function () {
 				this.buttonLoader = true;
 
-				axios.get(`/api/user/getStatistics`).then(({ data } = res) => {
+				axios.get(`/api/user/getStatistics`, {
+				    params: {
+				        filter: {
+                            type: ['patient'],
+				            fromDate:this.dateFrom,
+                            toDate: this.dateTo,
+				        },
+                    }
+                }).then(({ data } = res) => {
 					this.statistics = data.statistics;
                 }).catch((err) => {
 					console.log(err);

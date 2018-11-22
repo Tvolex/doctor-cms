@@ -9,6 +9,7 @@ export default new Vuex.Store({
 		event: null,
         doctors: null,
         patients: null,
+        selectedPatient: null,
 	},
     getters: {
         user(state) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         },
         patients(state) {
             return state.patients;
+        },
+        selectedPatient(state) {
+            return state.selectedPatient;
         },
     },
     mutations: {
@@ -37,7 +41,7 @@ export default new Vuex.Store({
         patients(state, {type, value}) {
             state[type] = value;
         },
-        exit(state, {type, value}) {
+        selectedPatient(state, {type, value}) {
             state[type] = value;
         },
     },

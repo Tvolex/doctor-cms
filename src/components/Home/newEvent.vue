@@ -32,6 +32,7 @@
                                         :items="doctors"
                                         item-text="fullName"
                                         item-value="_id"
+                                        item-avatar="avatar"
                                         v-model="doctor"
                                         :rules="doctorRules"
                                         label="Лікар"

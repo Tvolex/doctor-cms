@@ -65,12 +65,27 @@
                                     outline
                             ></v-select>
                         </v-flex>
+                        <v-flex xs12 >
+                            <v-text-field
+                                    v-model="cabinet"
+                                    :rules="cabinetRules"
+                                    label="кабінета"
+                                    name="cabinet"
+                                    outline
+                                    required
+                            ></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 align-center>
+                            <v-btn flat>
+                                <input type="file" @change="onFileChanged">
+                            </v-btn>
+                        </v-flex>
                     </v-layout>
                     <v-layout>
                         <v-flex xs12>
                             <v-btn large round color="success"
                                    :loading="loading"
-                                   :disabled="!isFormValid"
+                                   :disabled="!isFormValid || loading"
                                    @click="Create">
                                 Зберегти
                                 <span slot="loader" class="custom-loader">
@@ -104,10 +119,18 @@
 				surname: null,
 				patronymic: null,
 				specialization: null,
+				cabinet: null,
+				selectedFile: null,
+                avatar: null,
 
 				specializations: ['Терапевт', 'Педіатр', 'Стоматолог', 'Ендокринолог', 'Офтальмолог'],
 
 				specializationRules: [(v)=> !!v || 'Вибір спеціалізації обов`язковий!'],
+				cabinetRules: [
+					(v)=> !!v || 'Вибір кабінета обов`язковий!',
+                    v => !Number.isNaN(parseInt(v)) || 'Must number',
+					v => _.inRange(parseInt(v), 0, 999) || 'Must in range [0, 999]',
+				],
 				emailRules: [
 					v => !!v || 'E-mail обов`язковий!',
 					v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
@@ -131,7 +154,35 @@
                     this.specializations = [];
                 });
             },
-			Create: function () {
+
+			onFileChanged (event) {
+				this.selectedFile = event.target.files[0];
+				this.uploadImage()
+			},
+
+            uploadImage() {
+            	if (this.selectedFile) {
+					const formData = new FormData();
+					formData.append('image', this.selectedFile, this.selectedFile.name);
+					console.log(formData);
+					axios.post('/api/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}).then(res => {
+						console.log(res.data._id);
+						this.avatar = res.data._id;
+                    }).catch(err => {
+                    	console.log(err);
+                    })
+                }
+            },
+
+			Create: async function () {
+				this.loading = false;
+
+				await this.uploadImage();
+
 				axios.post('/api/user/', {
 					newDoctor: {
 						email: this.email,
@@ -139,10 +190,12 @@
 						surname: this.surname,
 						patronymic: this.patronymic,
 						specialization: this.specialization,
+                        cabinet: this.cabinet,
+                        avatar: this.avatar,
 					},
 				}).then((res) => {
 					this.loading = false;
-					this.$notificator('info', 'Новий запис лікаря створено успішно!')
+					this.$notificator('info', 'Нового лікаря створено успішно!')
 				}).catch((err) => {
 					this.loading = false;
 					console.log(err);

@@ -148,12 +148,17 @@
                                     required
                             ></v-text-field>
                         </v-flex>
+                        <v-flex xs12 align-center>
+                            <v-btn flat>
+                                <input type="file" @change="onFileChanged">
+                            </v-btn>
+                        </v-flex>
                     </v-layout>
                     <v-layout>
                         <v-flex xs12>
                             <v-btn large round color="success"
                                    :loading="loading"
-                                   :disabled="!isFormValid"
+                                   :disabled="!isFormValid || loading"
                                    @click="Create">
                                 Зберегти
                                 <span slot="loader" class="custom-loader">
@@ -191,6 +196,9 @@
                 passportSeries: null,
                 passportNumber: null,
 
+				selectedFile: null,
+				avatar: null,
+
                 emailRules: [
                     v => !!v || 'E-mail обов`язковий!',
                     v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
@@ -218,7 +226,33 @@
 			},
 		},
         methods: {
-			Create: function () {
+			onFileChanged (event) {
+				this.selectedFile = event.target.files[0];
+				this.uploadImage()
+			},
+
+			uploadImage() {
+				if (this.selectedFile) {
+					const formData = new FormData();
+					formData.append('image', this.selectedFile, this.selectedFile.name);
+					console.log(formData);
+					axios.post('/api/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}).then(res => {
+						console.log(res.data._id);
+						this.avatar = res.data._id;
+					}).catch(err => {
+						console.log(err);
+					})
+				}
+			},
+			Create: async function () {
+				this.loading = false;
+
+				await this.uploadImage();
+
                 axios.post('/api/user/', {
                     newPatient: {
                         email: this.email,
@@ -232,10 +266,11 @@
                         apartment: this.apartment,
                         passportSeries: this.passportSeries,
                         passportNumber: this.passportNumber,
+						avatar: this.avatar,
                     },
                 }).then((res) => {
                     this.loading = false;
-                    this.$notificator('info', 'Новий запис пацієнт створено успішно!')
+                    this.$notificator('info', 'Нового пацієнта створено успішно!')
                 }).catch((err) => {
                     this.loading = false;
                     console.log(err);

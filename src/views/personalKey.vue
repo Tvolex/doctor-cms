@@ -59,13 +59,9 @@
             }
         },
         mounted() {
-            const { selectedPatient } = this.$store.getters;
-            this.personalKey = selectedPatient.personalKey;
-
-            if (selectedPatient) {
-                this.label = `Персональний ключ для ${selectedPatient.fullName}`;
+            if (this.$store.getters.selectedPatient) {
+                this.label = `Персональний ключ для ${this.$store.getters.selectedPatient.fullName}`;
             }
-
         },
 		data() {
 			return {

@@ -60,6 +60,7 @@
         },
         mounted() {
             if (this.$store.getters.selectedPatient) {
+				this.personalKey = this.$store.getters.selectedPatient.personalKey;
                 this.label = `Персональний ключ для ${this.$store.getters.selectedPatient.fullName}`;
             }
         },

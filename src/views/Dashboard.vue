@@ -2,7 +2,7 @@
     <div v-if="auth && user" class="Dashboard">
         <Navbar :user="user"></Navbar>
         <main>
-            <Statistics v-show="route === ('/dashboard' || '/dashboard/')"></Statistics>
+            <Statistics v-show="route === ('/dashboard' || '/dashboard/')" :user="user"></Statistics>
             <Calendar v-show="route === ('/dashboard/calendar' || '/dashboard/calendar')"></Calendar>
             <NewPatient v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')" ></NewPatient>
             <NewDoctor v-if="user.admin"  v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')" ></NewDoctor>

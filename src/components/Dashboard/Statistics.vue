@@ -36,11 +36,32 @@
                 </v-flex>
             </v-layout>
             <v-layout align-start justify-space-around row wrap main-items>
-                <v-flex xs12 md5 offset-md1>
-                    <line-chart :data="statistics.lineChartData" :dataset="{borderWidth: 5}"></line-chart>
+                <v-flex v-if="user.admin" xs12 md5 >
+                    <v-card style="background: rgba(255,255,255,0.4)" class="my-3 pa-3 text-xs-center">
+                        <v-card-title>
+                            <h3><b>Лікарі</b></h3>
+                        </v-card-title>
+                        <bar-chart :data="statistics.barChartData" :dataset="{borderWidth: 1}"></bar-chart>
+                    </v-card>
+                </v-flex>
+                <v-flex v-else xs12 md5 >
+                    <v-card style="background: rgba(255,255,255,0.4)" class="my-3 pa-3 text-xs-center">
+                        <v-card-title>
+                            <h3><b>Пацієнти</b></h3>
+                        </v-card-title>
+                        <line-chart :data="statistics.lineChartData" :dataset="{borderWidth: 5}"></line-chart>
+                    </v-card>
                 </v-flex>
                 <v-flex xs12 md6>
-                    <pie-chart :donut="true" :colors="colors" :data="statistics.pieChartData"></pie-chart>
+                    <v-card style="background: rgba(255,255,255,0.4)" class="my-3 pa-3 text-xs-center">
+                        <v-card-title v-if="user.admin">
+                            <h3><b>Топ 5</b></h3>
+                        </v-card-title>
+                        <v-card-title  v-else>
+                            <h3><b>Записи</b></h3>
+                        </v-card-title>
+                        <pie-chart :donut="true" :colors="colors" :data="statistics.pieChartData">Top 5</pie-chart>
+                    </v-card>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -62,15 +83,16 @@
         },
 		data () {
 			return {
-			    colors: ['#FEC5E5', '#D0F0C0', '#D1C4E9', '#C5CAE9', '#F0F4C3'],
+			    colors: ['#FEC5E5', '#D0F0C0', '#D1C4E9', '#C5CAE9', '#F0F4C3', '#FFF3E0', '#CFD8DC', '#C8E6C9', '#F8BBD0','#E1BEE7'],
                 buttonLoader: null,
 				loading: false,
 				dateFrom: moment().startOf('month').format("YYYY-MM-DD"),
 				dateTo: moment().endOf('month').format("YYYY-MM-DD"),
                 statistics: {
-					pieChartData: {'Обстежено': 0, 'Записано на обстеження': 0},
+					pieChartData: {'-': 0,},
+					barChartData: {name: '-', data: {}},
 					lineChartData: [
-						{name: 'Кількість пацієнтів', data: {}},
+						{name: '-', data: {}},
 					],
                 }
 			}

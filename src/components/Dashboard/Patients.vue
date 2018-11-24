@@ -142,7 +142,7 @@
                                         </v-list-tile-action>
 
                                         <v-list-tile-content>
-                                            <router-link to="/" tag="v-list-tile-title">Додати новий запис</router-link>
+                                            <v-btn @click="AddNewEvent" tag="v-list-tile-title">Додати новий запис</v-btn>
                                         </v-list-tile-content>
                                     </v-list-tile>
                                 </v-list>

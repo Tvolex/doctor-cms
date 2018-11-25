@@ -17,7 +17,7 @@
                         <v-flex xs12>
                             <v-text-field
                                     v-model="personalKey"
-                                    label="Персональний ключ"
+                                    :label="label"
                                     name="key"
                                     :rules="personalKeyRules"
                                     outline
@@ -89,6 +89,11 @@
 
                     if (res.data && res.data.type && res.data.message) {
                         this.$notificator(res.data.type, res.data.message);
+                    }
+
+                    if (this.$store.getters.selectedPatient) {
+                    	this.$router.push('/dashboard/patients');
+						this.$store.dispatch({type: "patients"})
                     }
 
                 }).catch((err) => {

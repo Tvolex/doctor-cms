@@ -83,7 +83,8 @@
                                     :key="selectedPatient._id"
                                     color="#fffacd"
                             >
-                                <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
+                                <v-btn class="green--text darken-1" flat @click="">Редагувати</v-btn>
+                                <v-btn class="red--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                                 <v-divider></v-divider>
                                 <v-card-text>
                                     <v-avatar
@@ -136,14 +137,11 @@
                             </v-card>
                             <v-card class="mx-3 mt-3">
                                 <v-list>
-                                    <v-list-tile @click="">
+                                    <v-list-tile @click="AddNewEvent">
                                         <v-list-tile-action>
                                             <v-icon color="green">add</v-icon>
                                         </v-list-tile-action>
-
-                                        <v-list-tile-content>
-                                            <v-btn @click="AddNewEvent" tag="v-list-tile-title">Додати новий запис</v-btn>
-                                        </v-list-tile-content>
+                                        <v-list-tile-title>Додати новий запис</v-list-tile-title>
                                     </v-list-tile>
                                 </v-list>
                             </v-card>
@@ -266,9 +264,10 @@
                                 class="mx-3"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
+                            <v-btn class="green--text darken-1" flat @click="">Редагувати</v-btn>
+                            <v-btn class="red--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
                             <v-card-text>
-                                <v-avatar size="88">
+                                <v-avatar size="125">
                                     <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
                                     <img v-else src="@/assets/person.png">
                                 </v-avatar>
@@ -342,14 +341,11 @@
                                     </v-layout>
                                 </v-list-tile>
                                 <v-divider></v-divider>
-                                <v-list-tile @click="">
+                                <v-list-tile @click="AddNewEvent">
                                     <v-list-tile-action>
                                         <v-icon color="green">add</v-icon>
                                     </v-list-tile-action>
-
-                                    <v-list-tile-content>
-                                        <v-btn @click="AddNewEvent" tag="v-list-tile-title">Додати новий запис</v-btn>
-                                    </v-list-tile-content>
+                                    <v-list-tile-title>Додати новий запис</v-list-tile-title>
                                 </v-list-tile>
                             </v-list>
                         </v-card>
@@ -378,6 +374,11 @@
 					this.$notificator('warning', 'Ви немаєте жодного пацієнта!')
                 }
             })
+        },
+        mounted() {
+			if (this.$store.getters.selectedPatient) {
+				this.selectedPatient = this.getEventsByPatient(this.$store.getters.selectedPatient._id);
+			}
         },
 		data () {
 			return {

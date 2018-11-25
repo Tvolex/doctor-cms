@@ -9,8 +9,8 @@
                         </h2>
                     </v-card-title>
                     <v-form v-model="isFormValid" name="newSpecializationForm">
-                        <v-layout justify-space-between wrap>
-                            <v-flex xs12 md3 lg3>
+                        <v-layout align-center justify-center wrap>
+                            <v-flex xs12 md8 xl4>
                                 <v-text-field
                                         v-model="name"
                                         :rules="nameRules"

@@ -264,9 +264,10 @@
                                 class="mx-3"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="">Редагувати</v-btn>
-                            <v-btn class="red--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
-                            <v-card-text>
+                            <v-btn class="green--text darken-1" flat @click="editMode = !editMode">{{ editMode ? 'Закрити' : 'Редагувати' }}</v-btn>
+                            <v-btn class="red--text darken-1" flat v-if="!editMode" @click="selectedPatient = null">Закрити</v-btn>
+                            <v-divider></v-divider>
+                            <v-card-text v-if="!editMode">
                                 <v-avatar size="125">
                                     <img v-if="selectedPatient.avatar" :src="selectedPatient.avatar">
                                     <img v-else src="@/assets/person.png">
@@ -277,9 +278,164 @@
                                 <div class="blue--text mb-2">{{ selectedPatient.email }}</div>
                                 <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
                             </v-card-text>
+                            <v-card-text v-if="editMode" class=" font-weight-thin font-italic">
+                                <v-form v-model="isFormValid" ref="settingsForm" name="settingsForm" :lazy-validation="false">
+                                    <v-layout row wrap justify-center align-start>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    :value="selectedPatient.email"
+                                                    disabled
+                                                    height="20px"
+                                                    append-outer-icon="lock"
+                                                    label="E-mail"
+                                                    name="email"
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="name"
+                                                    :value="selectedPatient.name"
+                                                    :rules="nameRules"
+                                                    height="20px"
+                                                    label="Ім`я"
+                                                    name="name"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="surname"
+                                                    :rules="surnameRules"
+                                                    label="Прізвище"
+                                                    height="20px"
+                                                    name="surname"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="patronymic"
+                                                    :rules="patronymicRules"
+                                                    height="20px"
+                                                    label="По батькові"
+                                                    name="patronymic"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-menu
+                                                    ref="menu"
+                                                    :close-on-content-click="false"
+                                                    v-model="menu"
+                                                    :nudge-right="40"
+                                                    lazy
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    full-width
+                                                    min-width="290px"
+                                            >
+                                                <v-text-field
+                                                        slot="activator"
+                                                        v-model="birthdate"
+                                                        height="20px"
+                                                        label="Birthday date"
+                                                        readonly
+                                                ></v-text-field>
+                                                <v-date-picker
+                                                        ref="picker"
+                                                        v-model="birthdate"
+                                                        :max="new Date().toISOString().substr(0, 10)"
+                                                        min="1900-01-01"
+                                                ></v-date-picker>
+                                            </v-menu>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="city"
+                                                    :rules="cityRules"
+                                                    height="20px"
+                                                    label="Місто"
+                                                    name="city"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="street"
+                                                    :rules="streetRules"
+                                                    height="20px"
+                                                    label="Вулиця"
+                                                    name="street"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="house"
+                                                    :rules="houseRules"
+                                                    height="20px"
+                                                    label="Номер будинку"
+                                                    name="house"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="apartment"
+                                                    height="20px"
+                                                    label="Номер квартири"
+                                                    name="apartment"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="passportSeries"
+                                                    :rules="passportSeriesRules"
+                                                    height="20px"
+                                                    label="Серія паспорта"
+                                                    max="3"
+                                                    name="passportSeries"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 md8>
+                                            <v-text-field
+                                                    v-model="passportNumber"
+                                                    :rules="passportNumberRules"
+                                                    height="20px"
+                                                    label="Номер паспорта"
+                                                    name="passportNumber"
+                                                    min="5"
+                                                    required
+                                            ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 align-center>
+                                            <v-btn flat>
+                                                <input type="file" @change="onFileChanged">
+                                            </v-btn>
+                                        </v-flex>
+                                        <v-flex class="xs12">
+                                            <v-divider></v-divider>
+                                        </v-flex>
+                                        <v-flex class="xs12">
+                                            <v-btn large round color="success"
+                                                   :loading="loading"
+                                                   :disabled="!wasChanges || !isFormValid || loading"
+                                                   @click="Save">
+                                                Зберегти
+                                                <span slot="loader" class="custom-loader">
+                                                <v-icon light>cached</v-icon>
+                                            </span>
+                                            </v-btn>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-form>
+                            </v-card-text>
                             <v-divider></v-divider>
                             <v-layout
                                     tag="v-card-text"
+                                    v-if="!editMode"
                                     text-md-center
                                     wrap
                             >
@@ -291,7 +447,7 @@
                                 selectedPatient.passportNumber }}</v-flex>
 
                             </v-layout>
-                            <v-list subheader >
+                            <v-list subheader v-if="!editMode">
                                 <v-subheader>Записи</v-subheader>
                                 <v-list-tile
                                         v-for="event in selectedPatient.events"
@@ -382,11 +538,49 @@
         },
 		data () {
 			return {
+				menu: null,
 				search: null,
 				loading: false,
-                selectedEvent: null,
-                selectedPatient: null,
+				wasChanges: false,
+				isFormValid: false,
+				selectedEvent: null,
+				selectedPatient: null,
                 eventDetailsDialog: false,
+
+				email: null,
+				name: null,
+				surname: null,
+				patronymic: null,
+				birthdate: null,
+				city: null,
+				street:  null,
+				house:  null,
+				apartment: null,
+				passportSeries: null,
+				passportNumber: null,
+
+				emailRules: [
+					v => !!v || 'E-mail обов`язковий!',
+					v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
+				],
+				nameRules: [v => !!v || 'Імя обов`язкове!'],
+				surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
+				patronymicRules: [v => !!v || 'По батькові обов`язкове!'],
+				birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
+				cityRules: [v => !!v || 'Місто обов`язкове!'],
+				streetRules: [v => !!v || 'Вулиця обов`язкова!'],
+				houseRules: [
+					v => !!v || 'Будинок обов`язкови!',
+					v => _.isInteger(parseInt(v)) || 'Номер будинка позначається числом!'
+				],
+				passportSeriesRules: [v => !!v || 'Серія паспорта обов`язкова!'],
+				passportNumberRules: [
+					v => !!v || 'Номер паспорта обов`язковий!',
+					v =>  _.isInteger(parseInt(v)) || 'Номер паспорта складається з цифр!'
+				],
+
+				editMode: false,
+
 				eventActions: [
 					{ title: 'Завершити', color: "green darken-1", method: (_id, option) => this.changeEventStatus(_id, EVENT_STATUS.PASSED)},
 					{ title: 'Відмінити', color: "red darken-1", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },
@@ -448,7 +642,60 @@
 						this.$notificator('warning', 'Ви немаєте жодного пацієнта!')
 					}
 				})
-			}
+			},
+
+			Save() {
+				if (this.wasChanges && this.selectedPatient && this.selectedPatient._id) {
+					this.uploadImage();
+
+					axios.put(`/api/user/${this.selectedPatient._id}`, {
+						name: this.name,
+						surname: this.surname,
+						patronymic: this.patronymic,
+						birthdate: this.birthdate,
+						city: this.city,
+						street: this.street,
+						house: this.house,
+						apartment: this.apartment,
+						passportSeries: this.passportSeries,
+						passportNumber: this.passportNumber,
+					}).then(res => {
+						console.log(res.data);
+						this.$notificator(res.data.type, res.data.message);
+						this.selectedPatient = res.data.value;
+						this.editMode = false;
+					}).catch(err => {
+						console.log(err);
+						this.$notificator('error', err.message)
+					}).finally(() => {
+						this.Search();
+						this.getEventsByPatient(this.selectedPatient._id)
+                    })
+				}
+			},
+
+			onFileChanged (event) {
+				this.selectedFile = event.target.files[0];
+				this.uploadImage()
+			},
+
+			uploadImage() {
+				if (this.selectedFile) {
+					const formData = new FormData();
+					formData.append('image', this.selectedFile, this.selectedFile.name);
+					console.log(formData);
+					axios.post('/api/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}).then(res => {
+						console.log(res.data._id);
+						this.avatar = res.data._id;
+					}).catch(err => {
+						console.log(err);
+					})
+				}
+			},
         },
         computed: {
 			auth() {
@@ -456,14 +703,77 @@
 			},
 		    patients() {
 				return this.$store.getters.patients;
-            }
+            },
 
         },
         watch: {
 		    selectedEvent (val, oldVal) {
 		        if (!!val)
 		            this.eventDetailsDialog = true
-            }
+            },
+			selectedPatient(patient) {
+				this.email = patient.email;
+				this.name = patient.name;
+				this.surname = patient.surname;
+				this.patronymic = patient.patronymic;
+				this.birthdate = patient.birthdate;
+				this.city = patient.city;
+				this.street = patient.street;
+				this.house = patient.house;
+				this.apartment = patient.apartment;
+				this.passportSeries = patient.passportSeries;
+				this.passportNumber = patient.passportNumber;
+            },
+			name(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			surname(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			patronymic(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			birthdate(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			city(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			street(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			house(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			apartment(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			passportSeries(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
+			passportNumber(value, oldValue) {
+				if (value) {
+					this.wasChanges = true;
+				}
+			},
         }
 	}
 </script>

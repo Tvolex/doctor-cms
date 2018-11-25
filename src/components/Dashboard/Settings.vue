@@ -7,7 +7,7 @@
                 </h2>
                 <v-form v-model="isFormValid" name="settingsForm">
                     <v-layout justify-center align-center wrap>
-                        <v-flex xs12 sm6 offset-sm3 md8 offset-md2>
+                        <v-flex xs12 sm7 >
                             <v-text-field
                                     :value="user.email"
                                     disabled
@@ -16,7 +16,10 @@
                                     required
                             ></v-text-field>
                         </v-flex>
-                        <v-flex xs11 sm5 offset-sm3 md7 offset-md2>
+                        <v-flex xs1>
+                            <v-icon>lock</v-icon>
+                        </v-flex>
+                        <v-flex xs11 sm7 >
                             <v-text-field
                                     v-model="name"
                                     :disabled="disableName"
@@ -27,7 +30,7 @@
                         <v-flex xs1>
                             <v-icon @click="disableName = !disableName">edit</v-icon>
                         </v-flex>
-                        <v-flex xs11 sm5 offset-sm3 md7 offset-md2>
+                        <v-flex xs11 sm7 >
                             <v-text-field
                                     v-model="surname"
                                     :disabled="disableSurname"
@@ -38,7 +41,7 @@
                         <v-flex xs1>
                             <v-icon @click="disableSurname = !disableSurname">edit</v-icon>
                         </v-flex>
-                        <v-flex xs11 sm5 offset-sm3 md7 offset-md2>
+                        <v-flex xs11 sm7 >
                             <v-text-field
                                     v-model="patronymic"
                                     :disabled="disablePatronymic"
@@ -49,7 +52,7 @@
                         <v-flex xs1>
                             <v-icon @click="disablePatronymic = !disablePatronymic">edit</v-icon>
                         </v-flex>
-                        <v-flex xs11 sm5 offset-sm3 md7 offset-md2>
+                        <v-flex xs11 sm7>
                             <v-text-field
                                     v-model="password"
                                     value="random password"

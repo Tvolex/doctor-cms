@@ -9,7 +9,7 @@
             <Doctors v-if="user.admin" v-show="route === ('/dashboard/doctors' || '/dashboard/doctors/')" :user="user"></Doctors>
             <NewSpecialization v-if="user.admin" v-show="route === ('/dashboard/specialization' || '/dashboard/specialization/')"></NewSpecialization>
             <Patients v-else v-show="route === ('/dashboard/patients' || '/dashboard/patients/')" :user="user"></Patients>
-            <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')"></Settings>
+            <Settings v-show="route === ('/dashboard/settings' || '/dashboard/settings/')" :user="user"></Settings>
         </main>
     </div>
 </template>

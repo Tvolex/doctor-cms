@@ -777,11 +777,15 @@
                                         <v-list subheader >
                                             <v-subheader>Коментарі</v-subheader>
                                             <v-divider></v-divider>
-                                            <v-list-tile @click="">
-                                                <v-layout align-center justify-center row wrap>
-                                                    <v-flex xs6 sm3 md3 lg3 >
+                                            <v-list-tile
+                                                    v-for="event in selectedPatient.history.filter(rec => !!rec.comment)"
+                                                    :key="event._id"
+                                                    @click=""
+                                            >
+                                                <v-layout align-center row wrap>
+                                                    <v-flex xs12 >
                                                         <v-list-tile-content>
-                                                            <v-list-tile-title>comments</v-list-tile-title>
+                                                            <v-list-tile-title v-html="event.comment"></v-list-tile-title>
                                                         </v-list-tile-content>
                                                     </v-flex>
                                                 </v-layout>
@@ -953,7 +957,8 @@
             },
             changeEventStatus(_id, status) {
                 axios.put(`/api/event/status/${_id}`, {
-                    status
+                    status,
+                    comment: this.comment,
                 })
                     .then((res) => {
                         this.loading = false;
@@ -1053,7 +1058,11 @@
 
         },
         watch: {
-
+            eventDetailsDialog(show) {
+                if (!show) {
+                    this.comment = null;
+                }
+            },
 			selectedPatient(patient) {
 				if (patient) {
 					this.email = patient.email;

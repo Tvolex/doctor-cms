@@ -291,7 +291,7 @@
                                                 <v-list-tile
                                                         v-for="event in selectedPatient.events"
                                                         :key="event._id"
-                                                        @click="selectedEvent = event"
+                                                        @click="showDetails(event)"
                                                 >
                                                     <v-layout align-center justify-space-around row wrap>
                                                         <v-flex xs6 >
@@ -374,21 +374,35 @@
             <v-dialog
                     v-if="selectedPatient && selectedEvent"
                     v-model="eventDetailsDialog"
-                    max-width="290"
+                    max-width="600px"
             >
                 <v-card>
                     <v-card-title class="headline">Деталі</v-card-title>
-
-                    <v-card-text>
-                        До: {{selectedEvent.specialization}}
-                    </v-card-text>
-                    <v-card-text>
-                        Пацієнт: {{selectedPatient.fullName}}
-                    </v-card-text>
-                    <v-card-text>
-                        Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
-                    </v-card-text>
-
+                    <v-layout row wrap justify-center>
+                        <v-flex xs10>
+                            <v-card-text>
+                                До: {{selectedEvent.specialization}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Пацієнт: {{selectedPatient.fullName}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-textarea
+                                    name="comment"
+                                    label="Коментарій"
+                                    v-model="comment"
+                                    hint="Введіть текст"
+                            ></v-textarea>
+                        </v-flex>
+                    </v-layout>
                     <v-card-actions>
                         <v-spacer></v-spacer>
 
@@ -695,7 +709,7 @@
                                                     v-for="event in selectedPatient.events"
                                                     :key="event._id"
                                                     avatar
-                                                    @click=""
+                                                    @click="showDetails(event)"
                                             >
                                                 <v-layout align-center justify-center row wrap>
                                                     <v-flex xs6 sm3 md3 lg3 >
@@ -715,25 +729,7 @@
                                                     </v-flex>
                                                     <v-flex xs2 sm2 md2>
                                                         <v-list-tile-content>
-                                                            <v-menu>
-                                                                <v-btn
-                                                                        slot="activator"
-                                                                        light
-                                                                        icon
-                                                                >
-                                                                    <v-icon>more_vert</v-icon>
-                                                                </v-btn>
 
-                                                                <v-list>
-                                                                    <v-list-tile
-                                                                            v-for="(item, i) in eventActions"
-                                                                            :key="i"
-                                                                            @click="item.method(event._id)"
-                                                                    >
-                                                                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                                                                    </v-list-tile>
-                                                                </v-list>
-                                                            </v-menu>
                                                         </v-list-tile-content>
                                                     </v-flex>
                                                 </v-layout>
@@ -798,6 +794,53 @@
                     </v-scroll-y-reverse-transition>
                 </v-flex>
             </v-layout>
+            <v-dialog
+                    v-if="selectedPatient && selectedEvent"
+                    v-model="eventDetailsDialog"
+                    max-width="600px"
+            >
+                <v-card>
+                    <v-card-title class="headline">Деталі</v-card-title>
+                    <v-layout row wrap justify-center>
+                        <v-flex xs10>
+                            <v-card-text>
+                                До: {{selectedEvent.specialization}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Пацієнт: {{selectedPatient.fullName}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-textarea
+                                    name="comment"
+                                    label="Коментарій"
+                                    v-model="comment"
+                                    hint="Введіть текст"
+                            ></v-textarea>
+                        </v-flex>
+                    </v-layout>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                                v-for="(item, i) in eventActions"
+                                :key="i"
+                                flat="flat"
+                                :color="item.color"
+                                @click="item.method(selectedEvent._id)"
+                        >
+                            {{item.title}}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 
@@ -831,11 +874,12 @@
                 TAB: null,
                 menu: null,
                 search: null,
-				loading: false,
-				wasChanges: false,
-				isFormValid: false,
-				selectedEvent: null,
-				selectedPatient: null,
+                comment: null,
+                loading: false,
+                wasChanges: false,
+                isFormValid: false,
+                selectedEvent: null,
+                selectedPatient: null,
                 eventDetailsDialog: false,
 
 				email: null,
@@ -976,6 +1020,11 @@
 				this.uploadImage()
 			},
 
+            showDetails(event) {
+                this.selectedEvent = event;
+                this.eventDetailsDialog = true;
+            },
+
 			uploadImage() {
 				if (this.selectedFile) {
 					const formData = new FormData();
@@ -1004,10 +1053,7 @@
 
         },
         watch: {
-		    selectedEvent (val, oldVal) {
-		        if (!!val)
-		            this.eventDetailsDialog = true
-            },
+
 			selectedPatient(patient) {
 				if (patient) {
 					this.email = patient.email;

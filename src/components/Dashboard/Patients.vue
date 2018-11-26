@@ -748,7 +748,7 @@
                                             <v-subheader>Історія</v-subheader>
                                             <v-divider></v-divider>
                                             <v-list-tile
-                                                    v-for="event in selectedPatient.events"
+                                                    v-for="event in selectedPatient.history"
                                                     :key="event._id"
                                                     avatar
                                                     @click=""

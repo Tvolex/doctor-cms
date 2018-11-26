@@ -267,27 +267,95 @@
                                     </v-form>
                                 </v-card-text>
                                 <v-divider></v-divider>
-                                <v-list subheader v-if="!editMode" >
-                                    <v-subheader>Записи</v-subheader>
-                                    <v-list-tile
-                                            v-for="event in selectedPatient.events"
-                                            :key="event._id"
-                                            @click="selectedEvent = event"
+                                <v-toolbar v-if="!editMode" height="10px" tabs>
+                                    <v-tabs
+                                            slot="extension"
+                                            v-model="TAB"
+                                            fixed-tabs
+                                            color="transparent"
                                     >
-                                        <v-layout align-center justify-space-around row wrap>
-                                            <v-flex xs6 >
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-flex>
-                                            <v-flex xs6>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title v-html="event.status"></v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-flex>
-                                        </v-layout>
-                                    </v-list-tile>
-                                </v-list>
+                                        <v-tabs-slider></v-tabs-slider>
+                                        <v-tab v-for="tab of tabs"
+                                               :href="`#${tab.value}`" class="primary--text"
+                                               :value="1"
+                                               :key="tab.id">
+                                            <v-icon>{{tab.icon}}</v-icon>
+                                        </v-tab>
+                                    </v-tabs>
+                                </v-toolbar>
+                                <v-tabs-items v-if="!editMode" class="white elevation-1">
+                                    <v-tab-item value="patient-tabs">
+                                        <v-card v-if="TAB === 'events'">
+                                            <v-list subheader>
+                                                <v-subheader>Записи</v-subheader>
+                                                <v-list-tile
+                                                        v-for="event in selectedPatient.events"
+                                                        :key="event._id"
+                                                        @click="selectedEvent = event"
+                                                >
+                                                    <v-layout align-center justify-space-around row wrap>
+                                                        <v-flex xs6 >
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                        <v-flex xs6>
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                    </v-layout>
+                                                </v-list-tile>
+                                            </v-list>
+                                        </v-card>
+                                        <v-card v-if="TAB === 'history'">
+                                            <v-list subheader >
+                                                <v-subheader>Історія</v-subheader>
+                                                <v-divider></v-divider>
+                                                <v-list-tile
+                                                        v-for="event in selectedPatient.events"
+                                                        :key="event._id"
+                                                        avatar
+                                                        @click=""
+                                                >
+                                                    <v-layout align-center justify-center row wrap>
+                                                        <v-flex xs6 sm3 md3 lg3 >
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title v-html="event.specialization"></v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                        <v-flex xs6 sm4 md4 lg3 >
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                        <v-flex xs4 sm3 md3 lg3 >
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                    </v-layout>
+                                                </v-list-tile>
+                                            </v-list>
+                                        </v-card>
+                                        <v-card v-if="TAB === 'comment'">
+                                            <v-list subheader >
+                                                <v-subheader>Коментарі</v-subheader>
+                                                <v-divider></v-divider>
+                                                <v-list-tile @click="">
+                                                    <v-layout align-center justify-center row wrap>
+                                                        <v-flex xs6 sm3 md3 lg3 >
+                                                            <v-list-tile-content>
+                                                                <v-list-tile-title>comments</v-list-tile-title>
+                                                            </v-list-tile-content>
+                                                        </v-flex>
+                                                    </v-layout>
+                                                </v-list-tile>
+                                            </v-list>
+                                        </v-card>
+                                    </v-tab-item>
+                                </v-tabs-items>
+
                             </v-card>
                             <v-card class="mx-3 mt-3" v-if="!editMode" >
                                 <v-list>
@@ -600,63 +668,132 @@
                                 selectedPatient.passportNumber }}</v-flex>
 
                             </v-layout>
-                            <v-list subheader v-if="!editMode">
-                                <v-subheader>Записи</v-subheader>
-                                <v-list-tile
-                                        v-for="event in selectedPatient.events"
-                                        :key="event._id"
-                                        avatar
-                                        @click=""
+                            <v-toolbar v-if="!editMode" height="10px" tabs>
+                                <v-tabs
+                                        slot="extension"
+                                        v-model="TAB"
+                                        fixed-tabs
+                                        color="transparent"
                                 >
-                                    <v-layout align-center justify-center row wrap>
-                                        <v-flex xs6 sm3 md3 lg3 >
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="event.specialization"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                        <v-flex xs6 sm4 md4 lg3 >
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                        <v-flex xs4 sm3 md3 lg3 >
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="event.status"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                        <v-flex xs2 sm2 md2>
-                                            <v-list-tile-content>
-                                                <v-menu>
-                                                    <v-btn
-                                                            slot="activator"
-                                                            light
-                                                            icon
-                                                    >
-                                                        <v-icon>more_vert</v-icon>
-                                                    </v-btn>
+                                    <v-tabs-slider></v-tabs-slider>
+                                    <v-tab v-for="tab of tabs"
+                                           :href="`#${tab.value}`" class="primary--text"
+                                           :value="1"
+                                           :key="tab.id">
+                                        <v-icon>{{tab.icon}}</v-icon>
+                                    </v-tab>
+                                </v-tabs>
+                            </v-toolbar>
 
-                                                    <v-list>
-                                                        <v-list-tile
-                                                                v-for="(item, i) in eventActions"
-                                                                :key="i"
-                                                                @click="item.method(event._id)"
-                                                        >
-                                                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                                                        </v-list-tile>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-list-tile-content>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-list-tile>
-                                <v-divider></v-divider>
-                                <v-list-tile @click="AddNewEvent" v-if="!editMode" >
-                                    <v-list-tile-action>
-                                        <v-icon color="green">add</v-icon>
-                                    </v-list-tile-action>
-                                    <v-list-tile-title>Додати новий запис</v-list-tile-title>
-                                </v-list-tile>
-                            </v-list>
+                            <v-tabs-items v-if="!editMode" class="white elevation-1">
+                                <v-tab-item value="patient-tabs">
+                                    <v-card v-if="TAB === 'events'">
+                                        <v-list subheader >
+                                            <v-subheader>Записи до лікаря</v-subheader>
+                                            <v-divider></v-divider>
+                                            <v-list-tile
+                                                    v-for="event in selectedPatient.events"
+                                                    :key="event._id"
+                                                    avatar
+                                                    @click=""
+                                            >
+                                                <v-layout align-center justify-center row wrap>
+                                                    <v-flex xs6 sm3 md3 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.specialization"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                    <v-flex xs6 sm4 md4 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                    <v-flex xs4 sm3 md3 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                    <v-flex xs2 sm2 md2>
+                                                        <v-list-tile-content>
+                                                            <v-menu>
+                                                                <v-btn
+                                                                        slot="activator"
+                                                                        light
+                                                                        icon
+                                                                >
+                                                                    <v-icon>more_vert</v-icon>
+                                                                </v-btn>
+
+                                                                <v-list>
+                                                                    <v-list-tile
+                                                                            v-for="(item, i) in eventActions"
+                                                                            :key="i"
+                                                                            @click="item.method(event._id)"
+                                                                    >
+                                                                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                                                                    </v-list-tile>
+                                                                </v-list>
+                                                            </v-menu>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-list-tile>
+                                            <v-divider></v-divider>
+                                            <v-list-tile @click="AddNewEvent" v-if="!editMode" >
+                                                <v-list-tile-action>
+                                                    <v-icon color="green">add</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-title>Додати новий запис</v-list-tile-title>
+                                            </v-list-tile>
+                                        </v-list>
+                                    </v-card>
+                                    <v-card v-if="TAB === 'history'">
+                                        <v-list subheader >
+                                            <v-subheader>Історія</v-subheader>
+                                            <v-divider></v-divider>
+                                            <v-list-tile
+                                                    v-for="event in selectedPatient.events"
+                                                    :key="event._id"
+                                                    avatar
+                                                    @click=""
+                                            >
+                                                <v-layout align-center justify-center row wrap>
+                                                    <v-flex xs6 sm3 md3 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.specialization"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                    <v-flex xs6 sm4 md4 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.fullDate.replace(':', ' ')"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                    <v-flex xs4 sm3 md3 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title v-html="event.status"></v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-list-tile>
+                                        </v-list>
+                                    </v-card>
+                                    <v-card v-if="TAB === 'comment'">
+                                        <v-list subheader >
+                                            <v-subheader>Коментарі</v-subheader>
+                                            <v-divider></v-divider>
+                                            <v-list-tile @click="">
+                                                <v-layout align-center justify-center row wrap>
+                                                    <v-flex xs6 sm3 md3 lg3 >
+                                                        <v-list-tile-content>
+                                                            <v-list-tile-title>comments</v-list-tile-title>
+                                                        </v-list-tile-content>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-list-tile>
+                                        </v-list>
+                                    </v-card>
+                                </v-tab-item>
+                            </v-tabs-items>
                         </v-card>
                     </v-scroll-y-reverse-transition>
                 </v-flex>
@@ -691,8 +828,9 @@
         },
 		data () {
 			return {
-				menu: null,
-				search: null,
+                TAB: null,
+                menu: null,
+                search: null,
 				loading: false,
 				wasChanges: false,
 				isFormValid: false,
@@ -734,7 +872,11 @@
 				],
 
 				editMode: false,
-
+                tabs: [
+                    { title: 'Записи до лікаря', icon: 'event_note', value: 'events', id: 1},
+                    { title: 'Історія', icon: 'history', value: 'history', id: 2},
+                    { title: 'Коментарі', icon: 'comments', value: 'comment', id: 3},
+                ],
 				eventActions: [
 					{ title: 'Завершити', color: "green darken-1", method: (_id, option) => this.changeEventStatus(_id, EVENT_STATUS.PASSED)},
 					{ title: 'Відмінити', color: "red darken-1", method: (_id) => this.changeEventStatus(_id, EVENT_STATUS.REJECTED) },

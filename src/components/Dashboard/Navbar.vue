@@ -4,13 +4,10 @@
 
             <v-toolbar-side-icon @click="statusNavBar = !statusNavBar"></v-toolbar-side-icon>
             <v-divider vertical inset></v-divider>
-            <v-toolbar-title >Dashboard</v-toolbar-title>
+            <v-toolbar-title>Панель управління</v-toolbar-title>
 
             <v-spacer></v-spacer>
 
-            <v-btn icon>
-                <v-icon>search</v-icon>
-            </v-btn>
             <v-divider vertical inset></v-divider>
             <v-btn icon>
                 <router-link to="/dashboard/calendar">
@@ -18,7 +15,7 @@
                 </router-link>
             </v-btn>
             <v-divider vertical inset></v-divider>
-            <v-btn icon>
+            <v-btn icon @click="statusNavBar = !statusNavBar">
                 <v-icon>more_vert</v-icon>
             </v-btn>
         </v-toolbar>

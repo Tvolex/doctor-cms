@@ -59,14 +59,15 @@ export default new Vuex.Store({
             return true;
         },
 
-        async doctors ({commit}) {
+        async doctors ({commit}, {search}) {
             let res;
             try {
                 res = await axios.get(`/api/user`, {
                     params: {
                         filter: {
                             type: ['doctor'],
-                        }
+                        },
+						search
                     }
                 });
             } catch (err) {

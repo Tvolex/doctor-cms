@@ -1,18 +1,18 @@
 <template>
     <div class="Login">
         <div id="nav">
-            <router-link to="/">Home</router-link> |
-            <router-link to="/about">About</router-link> |
-            <router-link to="/login">Login</router-link>
+            <router-link to="/">Головна</router-link> |
+            <router-link to="/about">Про медични центр</router-link> |
+            <router-link to="/login">Вхід</router-link>
         </div>
         <img alt="Logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
         <v-app>
             <v-container fluid>
                 <v-layout row wrap main-items>
                     <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
-                        <h1>Welcome to the best medical center</h1>
+                        <h1>Доброго дня, міцного здоров`я</h1>
                         <p>
-                            The best medical center
+                            Найкращий медчиний центр
                         </p>
 
                         <v-form v-model="isFormValid" name="authForm">
@@ -22,6 +22,7 @@
                                             v-model="email"
                                             :rules="emailRules"
                                             label="E-mail"
+                                            prepend-icon="person"
                                             name="email"
                                             required
                                     ></v-text-field>
@@ -34,6 +35,7 @@
                                             :rules="passwordRules"
                                             type="password"
                                             label="Пароль"
+                                            prepend-icon="lock"
                                             name="password"
                                             required
                                     ></v-text-field>

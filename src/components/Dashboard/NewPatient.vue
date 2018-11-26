@@ -52,15 +52,16 @@
                             ></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <!-- <v-text-field
-                                     v-model="birthdate"
-                                     :rules="birthdateRules"
-                                     label="Дата народження"
-                                     type="date"
-                                     name="birthdate"
-                                     outline
-                                     required
-                             ></v-text-field>-->
+                            <v-text-field
+                                    v-model="contact"
+                                    :rules="contactRules"
+                                    label="Номер телефону"
+                                    name="contact"
+                                    outline
+                                    required
+                            ></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
                             <v-menu
                                     ref="menu"
                                     :close-on-content-click="false"
@@ -75,7 +76,7 @@
                                 <v-text-field
                                         slot="activator"
                                         v-model="birthdate"
-                                        label="Дата народження"
+                                        label="Birthday date"
                                         readonly
                                         outline
                                 ></v-text-field>
@@ -97,7 +98,7 @@
                                     required
                             ></v-text-field>
                         </v-flex>
-                        <v-flex xs12 md4>
+                        <v-flex xs12 md2>
                             <v-text-field
                                     v-model="street"
                                     :rules="streetRules"
@@ -121,6 +122,7 @@
                             <v-text-field
                                     v-model="apartment"
                                     label="Номер квартири"
+                                    type="number"
                                     name="apartment"
                                     outline
                                     required
@@ -142,8 +144,8 @@
                                     v-model="passportNumber"
                                     :rules="passportNumberRules"
                                     label="Номер паспорта"
+                                    type="number"
                                     name="passportNumber"
-                                    min="5"
                                     outline
                                     required
                             ></v-text-field>
@@ -184,17 +186,18 @@
                 menu: null,
                 isFormValid: false,
 
-                email: null,
-                name: null,
-                surname: null,
-                patronymic: null,
-                birthdate: moment().set('year', 2000).format("YYYY-MM-DD"),
-                city: null,
-                street: null,
-                house: null,
-                apartment: null,
-                passportSeries: null,
-                passportNumber: null,
+				email: null,
+				name: null,
+				surname: null,
+				patronymic: null,
+				contact: null,
+				birthdate: moment().set('year', 2000).format("YYYY-MM-DD"),
+				city: null,
+				street: null,
+				house: null,
+				apartment: null,
+				passportSeries: null,
+				passportNumber: null,
 
 				selectedFile: null,
 				avatar: null,
@@ -204,9 +207,10 @@
                     v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
                 ],
                 nameRules: [v => !!v || 'Імя обов`язкове!'],
-                surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
-                patronymicRules: [v => !!v || 'По батькові обов`язкове!'],
-                birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
+				surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
+				patronymicRules: [v => !!v || 'По батькові обов`язкове!'],
+				contactRules: [(v)=> !!v || 'Номер телефону обов`язковий!'],
+				birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
                 cityRules: [v => !!v || 'Місто обов`язкове!'],
                 streetRules: [v => !!v || 'Вулиця обов`язкова!'],
                 houseRules: [
@@ -255,17 +259,18 @@
 
                 axios.post('/api/user/', {
                     newPatient: {
-                        email: this.email,
-                        name: this.name,
-                        surname: this.surname,
-                        patronymic: this.patronymic,
-                        birthdate: moment(this.birthdate).format("YYYY-MM-DD"),
-                        city: this.city,
-                        street: this.street,
-                        house: this.house,
-                        apartment: this.apartment,
-                        passportSeries: this.passportSeries,
-                        passportNumber: this.passportNumber,
+						email: this.email,
+						name: this.name,
+						surname: this.surname,
+						patronymic: this.patronymic,
+						contact: this.contact,
+						birthdate: moment(this.birthdate).format("YYYY-MM-DD"),
+						city: this.city,
+						street: this.street,
+						house: this.house,
+						apartment: this.apartment,
+						passportSeries: this.passportSeries,
+						passportNumber: this.passportNumber,
 						avatar: this.avatar,
                     },
                 }).then((res) => {

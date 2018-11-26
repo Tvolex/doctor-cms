@@ -68,15 +68,16 @@
                             ></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <!-- <v-text-field
-                                     v-model="birthdate"
-                                     :rules="birthdateRules"
-                                     label="Дата народження"
-                                     type="date"
-                                     name="birthdate"
-                                     outline
-                                     required
-                             ></v-text-field>-->
+                            <v-text-field
+                                    v-model="contact"
+                                    :rules="contactRules"
+                                    label="Номер телефону"
+                                    name="contact"
+                                    outline
+                                    required
+                            ></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
                             <v-menu
                                     ref="menu"
                                     :close-on-content-click="false"
@@ -111,9 +112,11 @@
                                     name="city"
                                     outline
                                     required
+                                    outline
+                                    required
                             ></v-text-field>
                         </v-flex>
-                        <v-flex xs12 md4>
+                        <v-flex xs12 md2>
                             <v-text-field
                                     v-model="street"
                                     :rules="streetRules"
@@ -165,6 +168,11 @@
                                     required
                             ></v-text-field>
                         </v-flex>
+                        <v-flex xs12 align-center>
+                            <v-btn flat>
+                                <input type="file" @change="onFileChanged">
+                            </v-btn>
+                        </v-flex>
                     </v-layout>
                     <v-layout>
                         <v-flex xs12>
@@ -209,6 +217,7 @@
 				name: null,
 				surname: null,
 				patronymic: null,
+                contact: null,
 				birthdate: moment().set('year', 2000).format("YYYY-MM-DD"),
 				city: null,
 				street: null,
@@ -217,24 +226,58 @@
 				passportSeries: null,
 				passportNumber: null,
 
+				selectedFile: null,
+				avatar: null,
+
 				emailRules: [
 					v => !!v || 'E-mail обов`язковий!',
 					v => /.+@.+/.test(v) || 'E-mail повинен бути валідним!'
 				],
 				nameRules: [v => !!v || 'Імя обов`язкове!'],
 				surnameRules: [v => !!v || 'Прізвище обов`язкове!'],
-				patronymicRules: [v => !!v || 'ПО батькові обов`язкове!'],
+				patronymicRules: [v => !!v || 'По батькові обов`язкове!'],
+				contactRules: [(v)=> !!v || 'Номер телефону обов`язковий!'],
 				birthdateRules: [v => !!v || 'Дата народження обов`язкова!' ],
 				cityRules: [v => !!v || 'Місто обов`язкове!'],
 				streetRules: [v => !!v || 'Вулиця обов`язкова!'],
-				houseRules: [v => !!v || 'Будинок обов`язкови!'],
+				houseRules: [
+					v => !!v || 'Будинок обов`язкови!',
+					v => _.isInteger(parseInt(v)) || 'Номер будинка позначається числом!'
+				],
 				passportSeriesRules: [v => !!v || 'Серія паспорта обов`язкова!'],
-				passportNumberRules: [v => !!v || 'Номер паспорта обов`язковий!'],
+				passportNumberRules: [
+					v => !!v || 'Номер паспорта обов`язковий!',
+					v =>  _.isInteger(parseInt(v)) || 'Номер паспорта складається з цифр!'
+				],
 			}
 		},
         methods: {
-			Register: function () {
+			onFileChanged (event) {
+				this.selectedFile = event.target.files[0];
+				this.uploadImage()
+			},
+
+			uploadImage() {
+				if (this.selectedFile) {
+					const formData = new FormData();
+					formData.append('image', this.selectedFile, this.selectedFile.name);
+					console.log(formData);
+					axios.post('/api/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					}).then(res => {
+						console.log(res.data._id);
+						this.avatar = res.data._id;
+					}).catch(err => {
+						console.log(err);
+					})
+				}
+			},
+			Register: async function () {
 				this.loading = true;
+
+				await this.uploadImage();
 
 				axios.post('/api/event', {
 					event: this.$store.getters.event,
@@ -243,6 +286,7 @@
 						name: this.name,
 						surname: this.surname,
 						patronymic: this.patronymic,
+						contact: this.contact,
 						birthdate: this.birthdate,
 						city: this.city,
 						street: this.street,
@@ -250,6 +294,7 @@
 						apartment: this.apartment,
 						passportSeries: this.passportSeries,
 						passportNumber: this.passportNumber,
+						avatar: this.avatar,
                     },
                 }).then((res) => {
 					this.loading = false;

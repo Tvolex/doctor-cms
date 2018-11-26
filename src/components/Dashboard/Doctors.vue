@@ -778,6 +778,13 @@
 					});
 				})
 			},
+			Search() {
+				this.$store.dispatch({type: "doctors", search: this.search}).then((doctors) => {
+					if (_.isEmpty(doctors)) {
+						this.$notificator('warning', 'Немає жодного лікаря!')
+					}
+				});
+			},
 			Save() {
 				if (this.wasChanges && this.selectedDoctor && this.selectedDoctor._id) {
 					this.uploadImage();

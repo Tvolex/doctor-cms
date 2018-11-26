@@ -1,6 +1,5 @@
 <template>
     <div class="home">
-
         <newEvent></newEvent>
     </div>
 </template>

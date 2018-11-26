@@ -1,9 +1,9 @@
 <template>
     <div class="newEvent">
         <div id="nav">
-            <router-link to="/">Home</router-link> |
-            <router-link to="/about">About</router-link> |
-            <router-link to="/login">Login</router-link>
+            <router-link to="/">Головна</router-link> |
+            <router-link to="/about">Про медични центр</router-link> |
+            <router-link to="/login">Вхід</router-link>
         </div>
         <img alt="Logo" width="250px" height="250px" src="@/assets/icon_clinical_research.png">
         <v-container fluid>

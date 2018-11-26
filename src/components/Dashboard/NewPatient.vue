@@ -75,7 +75,7 @@
                                 <v-text-field
                                         slot="activator"
                                         v-model="birthdate"
-                                        label="Birthday date"
+                                        label="Дата народження"
                                         readonly
                                         outline
                                 ></v-text-field>

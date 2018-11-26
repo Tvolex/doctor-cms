@@ -83,10 +83,10 @@
                                     :key="selectedPatient._id"
                                     color="#fffacd"
                             >
-                                <v-btn class="green--text darken-1" flat @click="">Редагувати</v-btn>
-                                <v-btn class="red--text darken-1" flat @click="selectedPatient = null">Закрити</v-btn>
+                                <v-btn class="green--text darken-1" flat @click="editMode = !editMode">{{ editMode ? 'Закрити' : 'Редагувати' }}</v-btn>
+                                <v-btn class="red--text darken-1" flat v-if="!editMode" @click="selectedPatient = null">Закрити</v-btn>
                                 <v-divider></v-divider>
-                                <v-card-text>
+                                <v-card-text v-if="!editMode">
                                     <v-avatar
                                             size="88"
                                     >
@@ -102,6 +102,7 @@
                                 <v-divider></v-divider>
                                 <v-layout
                                         tag="v-card-text"
+                                        v-if="!editMode"
                                         text-md-center
                                         wrap
                                 >
@@ -112,8 +113,161 @@
                                     <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
                                     selectedPatient.passportNumber }}</v-flex>
                                 </v-layout>
+                                <v-card-text v-if="editMode" class=" font-weight-thin font-italic">
+                                    <v-form v-model="isFormValid" ref="patientEditForm" name="patientEditForm" :lazy-validation="false">
+                                        <v-layout row wrap justify-center align-start>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        :value="selectedPatient.email"
+                                                        disabled
+                                                        height="20px"
+                                                        append-outer-icon="lock"
+                                                        label="E-mail"
+                                                        name="email"
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="name"
+                                                        :rules="nameRules"
+                                                        height="20px"
+                                                        label="Ім`я"
+                                                        name="name"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="surname"
+                                                        :rules="surnameRules"
+                                                        label="Прізвище"
+                                                        height="20px"
+                                                        name="surname"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="patronymic"
+                                                        :rules="patronymicRules"
+                                                        height="20px"
+                                                        label="По батькові"
+                                                        name="patronymic"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-menu
+                                                        ref="menu"
+                                                        :close-on-content-click="false"
+                                                        v-model="menu"
+                                                        :nudge-right="40"
+                                                        lazy
+                                                        transition="scale-transition"
+                                                        offset-y
+                                                        full-width
+                                                        min-width="290px"
+                                                >
+                                                    <v-text-field
+                                                            slot="activator"
+                                                            v-model="birthdate"
+                                                            height="20px"
+                                                            label="Birthday date"
+                                                            readonly
+                                                    ></v-text-field>
+                                                    <v-date-picker
+                                                            ref="picker"
+                                                            v-model="birthdate"
+                                                            :max="new Date().toISOString().substr(0, 10)"
+                                                            min="1900-01-01"
+                                                    ></v-date-picker>
+                                                </v-menu>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="city"
+                                                        :rules="cityRules"
+                                                        height="20px"
+                                                        label="Місто"
+                                                        name="city"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="street"
+                                                        :rules="streetRules"
+                                                        height="20px"
+                                                        label="Вулиця"
+                                                        name="street"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="house"
+                                                        :rules="houseRules"
+                                                        height="20px"
+                                                        label="Номер будинку"
+                                                        name="house"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="apartment"
+                                                        height="20px"
+                                                        label="Номер квартири"
+                                                        name="apartment"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="passportSeries"
+                                                        :rules="passportSeriesRules"
+                                                        height="20px"
+                                                        label="Серія паспорта"
+                                                        max="3"
+                                                        name="passportSeries"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 md8>
+                                                <v-text-field
+                                                        v-model="passportNumber"
+                                                        :rules="passportNumberRules"
+                                                        height="20px"
+                                                        label="Номер паспорта"
+                                                        name="passportNumber"
+                                                        min="5"
+                                                        required
+                                                ></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 align-center>
+                                                <v-btn flat>
+                                                    <input type="file" @change="onFileChanged">
+                                                </v-btn>
+                                            </v-flex>
+                                            <v-flex class="xs12">
+                                                <v-divider></v-divider>
+                                            </v-flex>
+                                            <v-flex class="xs12">
+                                                <v-btn large round color="success"
+                                                       :loading="loading"
+                                                       :disabled="!wasChanges || !isFormValid || loading"
+                                                       @click="Save">
+                                                    Зберегти
+                                                    <span slot="loader" class="custom-loader">
+                                                <v-icon light>cached</v-icon>
+                                            </span>
+                                                </v-btn>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-form>
+                                </v-card-text>
                                 <v-divider></v-divider>
-                                <v-list subheader >
+                                <v-list subheader v-if="!editMode" >
                                     <v-subheader>Записи</v-subheader>
                                     <v-list-tile
                                             v-for="event in selectedPatient.events"
@@ -135,7 +289,7 @@
                                     </v-list-tile>
                                 </v-list>
                             </v-card>
-                            <v-card class="mx-3 mt-3">
+                            <v-card class="mx-3 mt-3" v-if="!editMode" >
                                 <v-list>
                                     <v-list-tile @click="AddNewEvent">
                                         <v-list-tile-action>
@@ -279,7 +433,7 @@
                                 <div class="blue--text subheading font-weight-bold">{{ selectedPatient.fullName }}</div>
                             </v-card-text>
                             <v-card-text v-if="editMode" class=" font-weight-thin font-italic">
-                                <v-form v-model="isFormValid" ref="settingsForm" name="settingsForm" :lazy-validation="false">
+                                <v-form v-model="isFormValid" ref="patientEditForm" name="patientEditForm" :lazy-validation="false">
                                     <v-layout row wrap justify-center align-start>
                                         <v-flex xs12 md8>
                                             <v-text-field
@@ -294,7 +448,6 @@
                                         <v-flex xs12 md8>
                                             <v-text-field
                                                     v-model="name"
-                                                    :value="selectedPatient.name"
                                                     :rules="nameRules"
                                                     height="20px"
                                                     label="Ім`я"
@@ -497,7 +650,7 @@
                                     </v-layout>
                                 </v-list-tile>
                                 <v-divider></v-divider>
-                                <v-list-tile @click="AddNewEvent">
+                                <v-list-tile @click="AddNewEvent" v-if="!editMode" >
                                     <v-list-tile-action>
                                         <v-icon color="green">add</v-icon>
                                     </v-list-tile-action>
@@ -549,6 +702,7 @@
 
 				email: null,
 				name: null,
+				avatar: null,
 				surname: null,
 				patronymic: null,
 				birthdate: null,
@@ -650,6 +804,7 @@
 
 					axios.put(`/api/user/${this.selectedPatient._id}`, {
 						name: this.name,
+						avatar: this.avatar,
 						surname: this.surname,
 						patronymic: this.patronymic,
 						birthdate: this.birthdate,
@@ -712,17 +867,19 @@
 		            this.eventDetailsDialog = true
             },
 			selectedPatient(patient) {
-				this.email = patient.email;
-				this.name = patient.name;
-				this.surname = patient.surname;
-				this.patronymic = patient.patronymic;
-				this.birthdate = patient.birthdate;
-				this.city = patient.city;
-				this.street = patient.street;
-				this.house = patient.house;
-				this.apartment = patient.apartment;
-				this.passportSeries = patient.passportSeries;
-				this.passportNumber = patient.passportNumber;
+				if (patient) {
+					this.email = patient.email;
+					this.name = patient.name;
+					this.surname = patient.surname;
+					this.patronymic = patient.patronymic;
+					this.birthdate = patient.birthdate;
+					this.city = patient.city;
+					this.street = patient.street;
+					this.house = patient.house;
+					this.apartment = patient.apartment;
+					this.passportSeries = patient.passportSeries;
+					this.passportNumber = patient.passportNumber;
+                }
             },
 			name(value, oldValue) {
 				if (value) {

@@ -434,7 +434,7 @@
             </v-dialog>
         </div>
         <div v-if="!detectIsMobile() && patients" >
-            <v-layout row align-center justify-center class="text-xs-center mx-3">
+            <v-layout row align-center justify-center class="print text-xs-center mx-3">
                 <v-flex xs12 sm6 md4>
                     <v-text-field
                             v-model="search"
@@ -446,7 +446,7 @@
             </v-layout>
             <v-layout row>
                 <v-flex xs12 md6 lg5>
-                    <v-card class="mx-3" v-if="patients.withEvents.length">
+                    <v-card class="print mx-3" v-if="patients.withEvents.length">
                         <v-list subheader>
                             <v-subheader>Записані пацієнти</v-subheader>
                             <v-list-tile
@@ -476,7 +476,7 @@
                         </v-list>
                         <v-divider></v-divider>
                     </v-card>
-                    <v-card key="transition6" class="mx-3 mt-3" v-if="patients.withoutEvents.length">
+                    <v-card key="transition6" class="print mx-3 mt-3" v-if="patients.withoutEvents.length">
                         <v-list subheader>
                             <v-subheader>Не записані пацієнти</v-subheader>
                             <v-list-tile
@@ -514,8 +514,8 @@
                                 class="mx-3"
                                 color="#fffacd"
                         >
-                            <v-btn class="green--text darken-1" flat @click="editMode = !editMode">{{ editMode ? 'Закрити' : 'Редагувати' }}</v-btn>
-                            <v-btn class="red--text darken-1" flat v-if="!editMode" @click="selectedPatient = null">Закрити</v-btn>
+                            <v-btn class="print green--text darken-1" flat @click="editMode = !editMode">{{ editMode ? 'Закрити' : 'Редагувати' }}</v-btn>
+                            <v-btn class="print red--text darken-1" flat v-if="!editMode" @click="selectedPatient = null">Закрити</v-btn>
                             <v-divider></v-divider>
                             <v-card-text v-if="!editMode">
                                 <v-avatar size="125">
@@ -794,24 +794,24 @@
                                             </v-list-tile>
                                         </v-list>
                                     </v-card>
-                                    <v-card v-if="TAB === 'comment'">
-                                        <v-list subheader >
+                                    <v-card v-if="TAB === 'comment'" id="commentsContent" media="print">
+                                        <v-list subheader id="comments">
                                             <v-subheader>Коментарі</v-subheader>
                                             <v-divider></v-divider>
-                                            <v-list-tile
-                                                    v-for="event in selectedPatient.history.filter(rec => !!rec.comment)"
-                                                    :key="event._id"
-                                                    @click=""
-                                            >
-                                                <v-layout align-center row wrap>
-                                                    <v-flex xs12 >
-                                                        <v-list-tile-content>
-                                                            <v-list-tile-title v-html="event.comment"></v-list-tile-title>
-                                                        </v-list-tile-content>
-                                                    </v-flex>
-                                                </v-layout>
-                                            </v-list-tile>
+                                            <v-expansion-panel focusable>
+                                                <v-expansion-panel-content
+                                                        v-for="event in selectedPatient.history.filter(hist =>  hist.status === 'завершено' && !!hist.comment)"
+                                                        :key="event._id"
+                                                        @click=""
+                                                >
+                                                    <div slot="header">{{`${event.specialization} - ${event.fullDate.split(':')[0]}`}}</div>
+                                                    <v-card>
+                                                        <v-card-text class="grey lighten-3">{{event.comment}}</v-card-text>
+                                                    </v-card>
+                                                </v-expansion-panel-content>
+                                            </v-expansion-panel>
                                         </v-list>
+                                        <v-btn class="warning"  @click="print()">print</v-btn>
                                     </v-card>
                                 </v-tab-item>
                             </v-tabs-items>
@@ -884,7 +884,7 @@
 
 <script>
     import _ from 'lodash';
-    import moment from 'moment';
+	import { Printd } from 'printd'
     import axios from 'axios';
     import { EVENT_STATUS } from '../../const';
 
@@ -904,6 +904,10 @@
 			if (this.$store.getters.selectedPatient) {
 				this.selectedPatient = this.getEventsByPatient(this.$store.getters.selectedPatient._id);
 			}
+			this.d = new Printd();
+
+			// Print dialog events (v0.0.9+)
+			const { contentWindow } = this.d.getIFrame()
         },
 		data () {
 			return {
@@ -965,6 +969,10 @@
 			}
 		},
         methods: {
+			print() {
+				this.$notificator('warning', 'in progress');
+			},
+
             AddNewEvent() {
                 if (this.selectedPatient) {
                     this.$store.commit('selectedPatient', {type: 'selectedPatient', value: this.selectedPatient});
@@ -1170,7 +1178,14 @@
 </script>
 
 <style >
+
     .eventsList {
         background-color: #59fb6075;
+    }
+
+    @media screen {
+        .print {
+
+        }
     }
 </style>

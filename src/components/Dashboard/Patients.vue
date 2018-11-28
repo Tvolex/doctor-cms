@@ -884,7 +884,6 @@
 
 <script>
     import _ from 'lodash';
-	import { Printd } from 'printd'
     import axios from 'axios';
     import { EVENT_STATUS } from '../../const';
 
@@ -904,10 +903,6 @@
 			if (this.$store.getters.selectedPatient) {
 				this.selectedPatient = this.getEventsByPatient(this.$store.getters.selectedPatient._id);
 			}
-			this.d = new Printd();
-
-			// Print dialog events (v0.0.9+)
-			const { contentWindow } = this.d.getIFrame()
         },
 		data () {
 			return {

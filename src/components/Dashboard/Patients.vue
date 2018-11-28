@@ -112,6 +112,13 @@
                                     selectedPatient.passportSeries }}</v-flex>
                                     <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
                                     selectedPatient.passportNumber }}</v-flex>
+                                    <v-flex tag="strong" xs6 >Контактні дані:</v-flex><v-flex xs6>{{
+                                    selectedPatient.contact }}</v-flex>
+                                    <v-flex tag="strong" xs6 >Місто:</v-flex><v-flex xs6>{{
+                                    selectedPatient.city}}</v-flex>
+                                    <v-flex tag="strong" xs6 >Вулиця:</v-flex><v-flex xs6>{{
+                                    `${selectedPatient.street}, ${selectedPatient.house}${selectedPatient.apartment ? '/' + selectedPatient.apartment  : ''}`
+                                    }}</v-flex>
                                 </v-layout>
                                 <v-card-text v-if="editMode" class=" font-weight-thin font-italic">
                                     <v-form v-model="isFormValid" ref="patientEditForm" name="patientEditForm" :lazy-validation="false">
@@ -395,11 +402,18 @@
                             </v-card-text>
                         </v-flex>
                         <v-flex xs10>
+                            <v-card-text>
+                                Тел: {{selectedPatient.contact}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
                             <v-textarea
                                     name="comment"
                                     label="Коментарій"
                                     v-model="comment"
+                                    :rules="commentRules"
                                     hint="Введіть текст"
+                                    required
                             ></v-textarea>
                         </v-flex>
                     </v-layout>
@@ -680,6 +694,13 @@
                                 selectedPatient.passportSeries }}</v-flex>
                                 <v-flex tag="strong" xs6 >Номер паспорта:</v-flex><v-flex xs6>{{
                                 selectedPatient.passportNumber }}</v-flex>
+                                <v-flex tag="strong" xs6 >Контактні дані:</v-flex><v-flex xs6>{{
+                                selectedPatient.contact }}</v-flex>
+                                <v-flex tag="strong" xs6 >Місто:</v-flex><v-flex xs6>{{
+                                selectedPatient.city}}</v-flex>
+                                <v-flex tag="strong" xs6 >Вулиця:</v-flex><v-flex xs6>{{
+                                    `${selectedPatient.street}, ${selectedPatient.house}${selectedPatient.apartment ? '/' + selectedPatient.apartment  : ''}`
+                                }}</v-flex>
 
                             </v-layout>
                             <v-toolbar v-if="!editMode" height="10px" tabs>
@@ -822,12 +843,21 @@
                             </v-card-text>
                         </v-flex>
                         <v-flex xs10>
-                            <v-textarea
-                                    name="comment"
-                                    label="Коментарій"
-                                    v-model="comment"
-                                    hint="Введіть текст"
-                            ></v-textarea>
+                            <v-card-text>
+                                Тел: {{selectedPatient.contact}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-form v-model="isFormValid">
+                                <v-textarea
+                                        name="comment"
+                                        label="Коментарій"
+                                        v-model="comment"
+                                        :rules="commentRules"
+                                        hint="Введіть текст"
+                                        required
+                                ></v-textarea>
+                            </v-form>
                         </v-flex>
                     </v-layout>
                     <v-card-actions>
@@ -837,6 +867,8 @@
                                 v-for="(item, i) in eventActions"
                                 :key="i"
                                 flat="flat"
+                                :loading="loading"
+                                :disabled="!isFormValid || loading"
                                 :color="item.color"
                                 @click="item.method(selectedEvent._id)"
                         >
@@ -918,6 +950,7 @@
 					v => !!v || 'Номер паспорта обов`язковий!',
 					v =>  _.isInteger(parseInt(v)) || 'Номер паспорта складається з цифр!'
 				],
+                commentRules: [v => !!v || 'Кометарій обов`язковий!'],
 
 				editMode: false,
                 tabs: [
@@ -956,30 +989,34 @@
                 });
             },
             changeEventStatus(_id, status) {
-                axios.put(`/api/event/status/${_id}`, {
-                    status,
-                    comment: this.comment,
-                })
-                    .then((res) => {
-                        this.loading = false;
-                        this.$notificator(res.data.type, res.data.message);
+                if (_id && status && this.comment) {
+                    axios.put(`/api/event/status/${_id}`, {
+                        status,
+                        comment: this.comment,
                     })
-                    .catch((err) => {
-                        this.loading = false;
-                        console.log(err);
-                        let message = err.message || 'Щось сталось не так :(';
-                        if (err.response && err.response.data && err.response.data.message) {
-                            message = err.response.data.message;
-                        }
-                        this.$notificator('error', message);
-                }).finally(() => {
-                    this.$store.dispatch({type: "patients"}).then(patients => {
-                        const patient = patients.withEvents.find(patient => _.isEqual(this.selectedPatient._id, patient._id));
-                        this.selectedPatient = patient ? this.getEventsByPatient(patient._id): null;
-                        this.eventDetailsDialog = false;
-                        this.selectedEvent = null;
-                    });
-                })
+                        .then((res) => {
+                            this.loading = false;
+                            this.$notificator(res.data.type, res.data.message);
+                        })
+                        .catch((err) => {
+                            this.loading = false;
+                            console.log(err);
+                            let message = err.message || 'Щось сталось не так :(';
+                            if (err.response && err.response.data && err.response.data.message) {
+                                message = err.response.data.message;
+                            }
+                            this.$notificator('error', message);
+                        }).finally(() => {
+                        this.$store.dispatch({type: "patients"}).then(patients => {
+                            const patient = patients.withEvents.find(patient => _.isEqual(this.selectedPatient._id, patient._id));
+                            this.selectedPatient = patient ? this.getEventsByPatient(patient._id): null;
+                            this.eventDetailsDialog = false;
+                            this.selectedEvent = null;
+                        });
+                    })
+                } else if (!this.comment) {
+                    this.$notificator('error', 'Будь-ласка, додайте коментарій!');
+                }
             },
 			Search() {
 				this.$store.dispatch({type: "patients", search: this.search } ).then((patients) => {

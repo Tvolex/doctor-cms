@@ -10,9 +10,9 @@
             <v-container fluid>
                 <v-layout row wrap main-items>
                     <v-flex xs10 offset-xs1 md6 offset-md3 lg4 offset-lg4>
-                        <h1>Доброго дня, міцного здоров`я</h1>
+                        <h1>Найкращий медчиний центр</h1>
                         <p>
-                            Найкращий медчиний центр
+                            Доброго дня, міцного вам здоров`я :)
                         </p>
 
                         <v-form v-model="isFormValid" name="authForm">

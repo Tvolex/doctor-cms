@@ -3,7 +3,7 @@
         <Navbar :user="user"></Navbar>
         <main>
             <Statistics v-show="route === ('/dashboard' || '/dashboard/')" :user="user"></Statistics>
-            <Calendar v-show="route === ('/dashboard/calendar' || '/dashboard/calendar')"></Calendar>
+            <Calendar v-show="route === ('/dashboard/calendar' || '/dashboard/calendar')" :user="user"></Calendar>
             <NewPatient v-show="route === ('/dashboard/newPatient' || '/dashboard/newPatient/')" ></NewPatient>
             <NewDoctor v-if="user.admin"  v-show="route === ('/dashboard/newDoctor' || '/dashboard/newDoctor/')" ></NewDoctor>
             <Doctors v-if="user.admin" v-show="route === ('/dashboard/doctors' || '/dashboard/doctors/')" :user="user"></Doctors>

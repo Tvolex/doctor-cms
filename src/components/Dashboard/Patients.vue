@@ -259,7 +259,18 @@
                                             <v-flex class="xs12">
                                                 <v-divider></v-divider>
                                             </v-flex>
-                                            <v-flex class="xs12">
+                                            <v-flex class="xs6">
+                                                <v-btn large round color="error"
+                                                       :loading="loading"
+                                                       :disabled="loading"
+                                                       @click="removePatient">
+                                                    Видалити
+                                                    <span slot="loader" class="custom-loader">
+                                                <v-icon light>cached</v-icon>
+                                            </span>
+                                                </v-btn>
+                                            </v-flex>
+                                            <v-flex class="xs6">
                                                 <v-btn large round color="success"
                                                        :loading="loading"
                                                        :disabled="!wasChanges || !isFormValid || loading"
@@ -667,7 +678,18 @@
                                         <v-flex class="xs12">
                                             <v-divider></v-divider>
                                         </v-flex>
-                                        <v-flex class="xs12">
+                                        <v-flex class="xs6">
+                                            <v-btn large round color="error"
+                                                   :loading="loading"
+                                                   :disabled="loading"
+                                                   @click="removePatient">
+                                                Видалити
+                                                <span slot="loader" class="custom-loader">
+                                                <v-icon light>cached</v-icon>
+                                            </span>
+                                            </v-btn>
+                                        </v-flex>
+                                        <v-flex class="xs6">
                                             <v-btn large round color="success"
                                                    :loading="loading"
                                                    :disabled="!wasChanges || !isFormValid || loading"
@@ -719,7 +741,6 @@
                                     </v-tab>
                                 </v-tabs>
                             </v-toolbar>
-
                             <v-tabs-items v-if="!editMode" class="white elevation-1">
                                 <v-tab-item value="patient-tabs">
                                     <v-card v-if="TAB === 'events'">
@@ -964,6 +985,36 @@
 			}
 		},
         methods: {
+			removePatient() {
+				this.loading = false;
+				this.$dialog.confirm("Ви дійсно бажаєте видалити пацієнта? Всі його записи також будуть видалені!")
+                    .then((dialog) => {
+                    	console.log(dialog);
+						axios.delete(`/api/user/${this.selectedPatient._id}`)
+							.then((res) => {
+								this.selectedPatient = null;
+								console.log(res.data);
+								this.$notificator(res.data.type, res.data.message);
+							})
+                            .catch((err) => {
+								console.log(err);
+								let message = err.message || 'Щось сталось не так :(';
+								if (err.response && err.response.data && err.response.data.message) {
+									message = err.response.data.message;
+								}
+								this.$notificator('error', message);
+                            })
+							.finally(() => {
+								this.loading = false;
+								this.$store.dispatch({type: "patients"}).then(patients => {
+									this.selectedPatient = null;
+								});
+							})
+                }).catch(() => {
+					console.log('Clicked on cancel')
+				});
+            },
+
 			print() {
 				this.$notificator('warning', 'in progress');
 			},
@@ -1181,18 +1232,20 @@
 </script>
 
 <style >
-
+    .dg-btn--ok {
+        color: #fefefe !important;
+        background-color: red !important;
+        border-color: red !important;
+    }
+    .dg-btn--cancel {
+        color: #fefefe !important;
+        background-color: green !important;
+    }
     .eventsList {
         background-color: #59fb6075;
     }
 
     .forEmail {
         text-align: center
-    }
-
-    @media screen {
-        .print {
-
-        }
     }
 </style>

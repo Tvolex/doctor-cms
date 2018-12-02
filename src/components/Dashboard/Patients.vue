@@ -460,7 +460,7 @@
                                     <img v-else src="@/assets/person.png" alt="">
                                 </v-list-tile-avatar>
 
-                                <v-layout align-center justify-center row wrap>
+                                <v-layout align-center justify-space-between row wrap>
                                     <v-flex xs12 sm6 lm5 md6>
                                         <v-list-tile-content>
                                             <v-list-tile-title v-html="patient.fullName"></v-list-tile-title>
@@ -468,7 +468,7 @@
                                     </v-flex>
                                     <v-flex xs12 sm6 lm5 md6>
                                         <v-list-tile-content>
-                                            <v-list-tile-title v-html="patient.email"></v-list-tile-title>
+                                            <v-list-tile-title  class="forEmail" v-html="patient.email"></v-list-tile-title>
                                         </v-list-tile-content>
                                     </v-flex>
                                 </v-layout>
@@ -1176,6 +1176,10 @@
 
     .eventsList {
         background-color: #59fb6075;
+    }
+
+    .forEmail {
+        text-align: center
     }
 
     @media screen {

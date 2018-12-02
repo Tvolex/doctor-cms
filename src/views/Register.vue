@@ -140,7 +140,6 @@
                             <v-text-field
                                     v-model="apartment"
                                     label="Номер квартири"
-                                    type="number"
                                     name="apartment"
                                     outline
                                     required

@@ -1083,7 +1083,15 @@
 						console.log(res.data._id);
 						this.avatar = res.data._id;
 					}).catch(err => {
+						this.loading = false;
 						console.log(err);
+						let message = err.message || 'Щось сталось не так :(';
+						if (err.response && err.response.data && err.response.data.message) {
+							message = err.response.data.message;
+						}
+						return this.$notificator('error', message);
+					}).finally(() => {
+						this.loading = false;
 					})
 				}
 			},

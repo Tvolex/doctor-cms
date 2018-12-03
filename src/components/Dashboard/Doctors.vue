@@ -595,7 +595,7 @@
                                         v-for="event in selectedDoctor.events"
                                         :key="event._id"
                                         avatar
-                                        @click=""
+                                        @click="showDetails(event)"
                                 >
                                     <v-layout align-center justify-center row wrap>
                                         <v-flex xs4 md4 lg3 class="test-md-center">
@@ -613,29 +613,6 @@
                                                 <v-list-tile-title v-html="event.status"></v-list-tile-title>
                                             </v-list-tile-content>
                                         </v-flex>
-                                        <v-flex xs1 lg3 class="test-md-center">
-                                            <v-list-tile-content>
-                                                <v-menu>
-                                                    <v-btn
-                                                            slot="activator"
-                                                            light
-                                                            icon
-                                                    >
-                                                        <v-icon>more_vert</v-icon>
-                                                    </v-btn>
-
-                                                    <v-list>
-                                                        <v-list-tile
-                                                                v-for="(item, i) in eventActions"
-                                                                :key="i"
-                                                                @click="item.method(event._id)"
-                                                        >
-                                                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                                                        </v-list-tile>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-list-tile-content>
-                                        </v-flex>
                                     </v-layout>
                                 </v-list-tile>
                             </v-list>
@@ -643,6 +620,59 @@
                     </v-scroll-y-reverse-transition>
                 </v-flex>
             </v-layout>
+            <v-dialog
+                    v-if="selectedDoctor && selectedEvent"
+                    v-model="eventDetailsDialog"
+                    max-width="600px"
+            >
+                <v-card>
+                    <v-card-title class="headline">Деталі</v-card-title>
+                    <v-layout row wrap justify-center>
+                        <v-flex xs10>
+                            <v-card-text>
+                                До: {{selectedEvent.specialization}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Дата: {{selectedEvent.fullDate.replace(':', " година: ")}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-card-text>
+                                Пацієнт: {{selectedEvent.patientFullName}}
+                            </v-card-text>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-form v-model="isFormValid">
+                                <v-textarea
+                                        name="comment"
+                                        label="Коментарій"
+                                        v-model="comment"
+                                        :rules="commentRules"
+                                        hint="Введіть текст"
+                                        required
+                                ></v-textarea>
+                            </v-form>
+                        </v-flex>
+                    </v-layout>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                                v-for="(item, i) in eventActions"
+                                :key="i"
+                                flat="flat"
+                                :loading="loading"
+                                :disabled="!isFormValid || loading"
+                                :color="item.color"
+                                @click="item.method(selectedEvent._id)"
+                        >
+                            {{item.title}}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 
@@ -694,6 +724,7 @@
 				apartment: null,
 				passportSeries: null,
 				passportNumber: null,
+                comment: null,
 
                 cabinet: null,
                 specialization: null,
@@ -723,11 +754,16 @@
 					v => !Number.isNaN(parseInt(v)) || 'Must number',
 					v => _.inRange(parseInt(v), 0, 999) || 'Must in range [0, 999]',
 				],
+                commentRules: [v => !!v || 'Кометарій обов`язковий!'],
 
 				editMode: false,
 			}
 		},
         methods: {
+            showDetails(event) {
+                this.selectedEvent = event;
+                this.eventDetailsDialog = true;
+            },
 			getSpecialization: function () {
 				axios.get(`/api/specialization`).then((res) => {
 					this.specializations = res.data;
@@ -755,7 +791,8 @@
             },
 			changeEventStatus(_id, status) {
 				axios.put(`/api/event/status/${_id}`, {
-					status
+					status,
+                    comment: this.comment,
 				})
 					.then((res) => {
 						this.loading = false;

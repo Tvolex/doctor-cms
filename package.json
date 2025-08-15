@@ -27,7 +27,7 @@
     "path": "^0.12.7",
     "serve-favicon": "^2.5.0",
     "v-toaster": "^1.0.3",
-    "vue": "^2.5.17",
+    "vue": "^3.0.0",
     "vue-chartkick": "^0.5.0",
     "vue-date": "^1.2.0",
     "vue-full-calendar": "^2.7.0",
